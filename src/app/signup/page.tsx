@@ -19,9 +19,8 @@ import { Input } from "@/components/ui/input"
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useRouter } from 'next/navigation'
-import Navbar from '../nav';
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL_RCP
+const APP_URL = "https://memeingle-backend.onrender.com/api/"
 
 const formSchema = z.object({
     email: z.string().email({
