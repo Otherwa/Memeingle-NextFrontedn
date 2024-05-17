@@ -23,14 +23,13 @@ export default function Dashboard() {
     const [isLoading, setIsLoading] = useState(true);
     const [swingClass, setSwingClass] = useState('');
 
-    const APP_URL = process.env.NEXT_PUBLIC_APP_URL_RCP;
-
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            router.push('/login');
-        }
-    }, [router]);
+    const APP_URL = https://memeingle-backend.onrender.com/api/
+        useEffect(() => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                router.push('/login');
+            }
+        }, [router]);
 
     useEffect(() => {
         const fetchData = async (token: string) => {
