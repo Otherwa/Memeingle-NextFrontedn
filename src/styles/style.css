@@ -1,0 +1,27 @@
+@keyframes swingleft {
+    0% {
+        transform: translateX(0) rotate(0deg);
+    }
+
+    100% {
+        transform: translateX(-500px) rotate(-20deg);
+    }
+}
+
+@keyframes swingright {
+    0% {
+        transform: translateX(0) rotate(0deg);
+    }
+
+    100% {
+        transform: translateX(200px) rotate(20deg);
+    }
+}
+
+.swingleft {
+    animation: swingleft 0.5s forwards;
+}
+
+.swingright {
+    animation: swingright 0.5s forwards;
+}
