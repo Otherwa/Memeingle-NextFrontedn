@@ -84,7 +84,6 @@ export default function SignupForm() {
     }
 
     return (
-
         <div className="flex min-h-screen flex-col items-center p-6">
             <div className="p-3">
                 {/* Display the error message if registration fails */}
@@ -95,7 +94,7 @@ export default function SignupForm() {
                     </Alert>
                 )}
             </div>
-            <div className="w-1/2">
+            <div>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 p-5 w-full">
                         <FormField

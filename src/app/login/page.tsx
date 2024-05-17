@@ -85,7 +85,7 @@ export default function LoginForm() {
                     </Alert>
                 )}
             </div>
-            <div className="w-1/2">
+            <div>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 p-5 w-full">
                         <FormField
