@@ -21,7 +21,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useRouter } from 'next/navigation'
 import Navbar from '../nav';
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL_RCP
 
 const formSchema = z.object({
     email: z.string().email({

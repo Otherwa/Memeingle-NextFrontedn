@@ -23,7 +23,7 @@ export default function Dashboard() {
     const [isLoading, setIsLoading] = useState(true);
     const [swingClass, setSwingClass] = useState('');
 
-    const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
+    const APP_URL = process.env.NEXT_PUBLIC_APP_URL_RCP;
 
     useEffect(() => {
         const token = localStorage.getItem('token');
