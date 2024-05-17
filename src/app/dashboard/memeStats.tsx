@@ -1,7 +1,18 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
-export default function MemeStats({ memes }) {
+interface Meme {
+    Title: number;
+    Author: string;
+    Url: string;
+    UpVotes: string;
+}
+
+interface MemeStatsProps {
+    memes: Meme[];
+}
+
+const MemeStats: React.FC<MemeStatsProps> = ({ memes }) => {
     return (
         <div className="grid grid-flow-row-dense grid-cols-1 md:grid-cols-3 gap-4 p-4">
             {memes.map((meme) => (
@@ -22,3 +33,5 @@ export default function MemeStats({ memes }) {
         </div>
     );
 }
+
+export default MemeStats;

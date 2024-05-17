@@ -9,9 +9,17 @@ import '@/styles/style.css'; // Import the CSS file
 import { isMobile } from 'react-device-detect';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
+interface Meme {
+    id: string;
+    Title: string;
+    Author: string;
+    Url: string;
+    UpVotes: string;
+}
+
 export default function Dashboard() {
     const router = useRouter();
-    const [memes, setMemes] = useState([]);
+    const [memes, setMemes] = useState<Meme[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [swingClass, setSwingClass] = useState('');
 
@@ -25,7 +33,7 @@ export default function Dashboard() {
     }, [router]);
 
     useEffect(() => {
-        const fetchData = async (token) => {
+        const fetchData = async (token: string) => {
             try {
                 const response = await axios.get(APP_URL + '/memelist', {
                     headers: {
@@ -49,7 +57,7 @@ export default function Dashboard() {
         }
     }, [router]);
 
-    const handleSwipe = (direction, memeId) => {
+    const handleSwipe = (direction: string, memeId: string) => {
         console.log(`Swiped ${direction} on meme with ID ${memeId}`);
 
         if (direction === 'right') {
@@ -59,12 +67,12 @@ export default function Dashboard() {
         }
     };
 
-    const onCardLeftScreen = (index, direction, memeId) => {
+    const onCardLeftScreen = (index: number, direction: string, memeId: string) => {
         console.log(`Card left screen at index ${index} ${direction} ${memeId}`);
         setMemes(prevMemes => prevMemes.filter((_, i) => i !== index));
     };
 
-    const likeMeme = async (memeId) => {
+    const likeMeme = async (memeId: string) => {
         try {
             const token = localStorage.getItem('token');
             const response = await axios.post(APP_URL + `/like/${memeId}`, {}, {
@@ -79,7 +87,7 @@ export default function Dashboard() {
         }
     };
 
-    const dislikeMeme = async (memeId) => {
+    const dislikeMeme = async (memeId: string) => {
         try {
             console.log('Meme disliked:', memeId);
         } catch (error) {
@@ -87,12 +95,12 @@ export default function Dashboard() {
         }
     };
 
-    const swipe = (direction) => {
+    const swipe = (direction: string) => {
         if (memes.length === 0) return;
 
         direction === "right" ? setSwingClass('swingright') : setSwingClass('swingleft'); // Add swing class to trigger animation
 
-        const memeId = memes[0].id;
+        const memeId = memes.length > 0 ? memes[0].id : "";
 
         setTimeout(() => {
             setMemes(prevMemes => prevMemes.slice(1));
@@ -125,13 +133,6 @@ export default function Dashboard() {
                             onSwipe={isMobile ? (direction) => handleSwipe(direction, meme.id) : () => { }}
                             preventSwipe={['up', 'down']}
                             className={index === 0 ? swingClass : ''} // Apply animation only to the first card
-                            style={{
-                                position: 'absolute',
-                                width: '100%',
-                                zIndex: memes.length - index,
-                                top: index * 5,
-                                transform: `translate(-50%, -50%) rotate(${(index - memes.length / 2) * 3}deg)`,
-                            }}
                         >
                             <Card className='m-3'>
                                 <CardHeader>

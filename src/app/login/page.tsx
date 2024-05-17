@@ -69,7 +69,7 @@ export default function LoginForm() {
             localStorage.setItem('token', token);
             // Redirect to dashboard page
             router.push('/dashboard');
-        } catch (error) {
+        } catch (error: any) {
             console.error('Registration failed:', error.response.data.message);
             setMessage(error.response.data.message);
         }
@@ -80,7 +80,7 @@ export default function LoginForm() {
             <div className="p-3">
                 {/* Display the error message if registration fails */}
                 {errorMessage && (
-                    <Alert status="desctructive" className="m-4">
+                    <Alert className="m-4">
                         <AlertTitle>Info</AlertTitle>
                         <AlertDescription>{errorMessage}</AlertDescription>
                     </Alert>

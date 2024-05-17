@@ -36,14 +36,14 @@ const formSchema = z.object({
 });
 
 export default function SignupForm() {
-    const [errorMessage, setMessage] = useState(null);
+    const [errorMessage, setMessage] = useState("");
 
     const router = useRouter();
 
     useEffect(() => {
         if (errorMessage) {
             const timer = setTimeout(() => {
-                setMessage(null);
+                setMessage("");
             }, 2000);
 
             return () => clearTimeout(timer);
@@ -78,7 +78,7 @@ export default function SignupForm() {
             else {
                 setMessage("Password Not Same");
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error('Registration failed:', error.response.data.message);
             setMessage(error.response.data.message);
         }
@@ -90,7 +90,7 @@ export default function SignupForm() {
             <div className="p-3">
                 {/* Display the error message if registration fails */}
                 {errorMessage && (
-                    <Alert status="desctructive" className="m-4">
+                    <Alert className="m-4">
                         <AlertTitle>Info</AlertTitle>
                         <AlertDescription>{errorMessage}</AlertDescription>
                     </Alert>

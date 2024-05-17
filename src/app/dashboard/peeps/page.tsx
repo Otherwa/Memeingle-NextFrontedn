@@ -16,7 +16,7 @@ export default function Peeps() {
         if (!token) {
             router.push('/login');
         }
-    }, []); // Empty dependency array ensures this effect runs only once
+    }, [router]); // Empty dependency array ensures this effect runs only once
 
 
     return (
