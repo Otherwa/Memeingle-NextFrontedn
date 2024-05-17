@@ -109,7 +109,7 @@ export default function Dashboard() {
     }
 
     return (
-        <div className="p-6 flex min-h-screen flex-col items-center p-6">
+        <div className="p-6 flex min-h-screen flex-col items-center overflow-y-hidden">
             <h1 className='text-2xl text-red-600 font-bold'>
                 Memes
             </h1>
@@ -120,32 +120,39 @@ export default function Dashboard() {
                     <div className="flex flex-row items-center p-6 gap-4">
                         {!isMobile ? (
                             <>
-                                <Button variant="outline" onClick={() => swipe('left')}>Swipe left!</Button>
-                                <Button variant="outline" onClick={() => swipe('right')}>Swipe right!</Button>
+                                <Button variant="outline" onClick={() => swipe('left')}>Dislike 👋</Button>
+                                <Button variant="outline" onClick={() => swipe('right')}>Like 👍</Button>
                             </>
                         ) : null}
                     </div>
                     {memes.map((meme, index) => (
-                        <TinderCard
-                            key={meme.id}
-                            onCardLeftScreen={(direction) => onCardLeftScreen(index, direction, meme.id)}
-                            onSwipe={isMobile ? (direction) => handleSwipe(direction, meme.id) : () => { }}
-                            preventSwipe={['up', 'down']}
-                            className={index === 0 ? swingClass : ''} // Apply animation only to the first card
+                        <div
+                            key={index}
+                            className="flex flex-col items-center p-3 h-3/5 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 aspect-[3/4] m-2"
                         >
-                            <Card className='m-3'>
-                                <CardHeader>
-                                    <CardTitle>{meme.Title}</CardTitle>
-                                    <CardDescription>{meme.Author}</CardDescription>
-                                </CardHeader>
-                                <CardContent>
-                                    <img src={meme.Url} alt="Meme" style={{ width: '45vw', height: '100%', objectFit: 'cover' }} />
-                                </CardContent>
-                                <CardFooter>
-                                    <p>Upvotes : {meme.UpVotes}</p>
-                                </CardFooter>
-                            </Card>
-                        </TinderCard>
+                            <TinderCard
+                                key={meme.id}
+                                onCardLeftScreen={(direction) => onCardLeftScreen(index, direction, meme.id)}
+                                onSwipe={isMobile ? (direction) => handleSwipe(direction, meme.id) : () => { }}
+                                preventSwipe={['up', 'down']}
+                                className={index === 0 ? swingClass : ''} // Apply animation only to the first card
+                            >
+                                <Card className="h-full w-full flex flex-col">
+                                    <CardHeader>
+                                        <CardTitle>{meme.Title}</CardTitle>
+                                        <CardDescription>{meme.Author}</CardDescription>
+                                    </CardHeader>
+                                    <CardContent className="flex-grow">
+                                        <div className="w-full h-full overflow-hidden">
+                                            <img src={meme.Url} alt="Meme" className="w-full h-full object-contain" />
+                                        </div>
+                                    </CardContent>
+                                    <CardFooter>
+                                        <p>Upvotes : {meme.UpVotes}</p>
+                                    </CardFooter>
+                                </Card>
+                            </TinderCard>
+                        </div>
                     ))}
                 </div>
             )}
