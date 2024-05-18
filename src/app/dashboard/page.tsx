@@ -21,9 +21,11 @@ export default function Dashboard() {
     const router = useRouter();
     const [memes, setMemes] = useState<Meme[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [isFetchingMore, setIsFetchingMore] = useState(false);
     const [swingClass, setSwingClass] = useState('');
 
-    const APP_URL = "https://memeingle-backend.onrender.com/api/"
+    const APP_URL = "http://localhost:5000/api/";
+
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -34,7 +36,7 @@ export default function Dashboard() {
     useEffect(() => {
         const fetchData = async (token: string) => {
             try {
-                const response = await axios.get(APP_URL + '/memelist', {
+                const response = await axios.get(APP_URL + 'memelist', {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -56,6 +58,24 @@ export default function Dashboard() {
         }
     }, [router]);
 
+    const fetchMoreMemes = async () => {
+        if (isFetchingMore) return; // Prevent multiple fetches
+        setIsFetchingMore(true);
+        const token = localStorage.getItem('token');
+        try {
+            const response = await axios.get(APP_URL + 'memelist', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            setMemes(prevMemes => [...prevMemes, ...response.data]);
+        } catch (error) {
+            console.error('Error fetching more memes:', error);
+        } finally {
+            setIsFetchingMore(false);
+        }
+    };
+
     const handleSwipe = (direction: string, memeId: string) => {
         console.log(`Swiped ${direction} on meme with ID ${memeId}`);
 
@@ -68,13 +88,19 @@ export default function Dashboard() {
 
     const onCardLeftScreen = (index: number, direction: string, memeId: string) => {
         console.log(`Card left screen at index ${index} ${direction} ${memeId}`);
-        setMemes(prevMemes => prevMemes.filter((_, i) => i !== index));
+        setMemes(prevMemes => {
+            const newMemes = prevMemes.filter((_, i) => i !== index);
+            if (newMemes.length < 3 && !isFetchingMore) { // Fetch more memes if less than 3 are left
+                fetchMoreMemes();
+            }
+            return newMemes;
+        });
     };
 
     const likeMeme = async (memeId: string) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.post(APP_URL + `/like/${memeId}`, {}, {
+            const response = await axios.post(APP_URL + `like/${memeId}`, {}, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -102,7 +128,15 @@ export default function Dashboard() {
         const memeId = memes.length > 0 ? memes[0].id : "";
 
         setTimeout(() => {
-            setMemes(prevMemes => prevMemes.slice(1));
+            // remove top one
+            setMemes(prevMemes => {
+                const newMemes = prevMemes.slice(1);
+                if (newMemes.length < 3 && !isFetchingMore) { // Fetch more memes if less than 3 are left
+                    fetchMoreMemes();
+                }
+                return newMemes;
+            });
+
             handleSwipe(direction, memeId);
             setSwingClass('');
         }, 500);

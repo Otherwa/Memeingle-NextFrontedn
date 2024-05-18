@@ -20,7 +20,8 @@ import { Input } from "@/components/ui/input"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useRouter } from 'next/navigation'
 
-const APP_URL = "https://memeingle-backend.onrender.com/api/"
+const APP_URL = "http://localhost:5000/api/"
+
 const formSchema = z.object({
     email: z.string().email({
         message: "Invalid email format.",
@@ -85,7 +86,7 @@ export default function LoginForm() {
                     </Alert>
                 )}
             </div>
-            <div>
+            <div className="w-3/6">
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 p-5 w-full">
                         <FormField
