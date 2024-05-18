@@ -20,7 +20,7 @@ import { Input } from "@/components/ui/input"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useRouter } from 'next/navigation'
 
-const APP_URL = "http://localhost:5000/api/"
+const APP_URL = "https://memeingle-backend.onrender.com/api/"
 
 const formSchema = z.object({
     email: z.string().email({

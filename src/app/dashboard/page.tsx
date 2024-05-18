@@ -24,7 +24,7 @@ export default function Dashboard() {
     const [isFetchingMore, setIsFetchingMore] = useState(false);
     const [swingClass, setSwingClass] = useState('');
 
-    const APP_URL = "http://localhost:5000/api/";
+    const APP_URL = "https://memeingle-backend.onrender.com/api/";
 
     useEffect(() => {
         const token = localStorage.getItem('token');
