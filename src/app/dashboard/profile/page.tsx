@@ -16,7 +16,7 @@ export default function Profile() {
     const [userData, setUserData] = useState<userData>({ userStats: [], user: [] });
     const [loading, setLoading] = useState(true);
 
-    const APP_URL = process.env.NEXT_PUBLIC_API_URL;
+    const APP_URL = "https://memeingle-backend.onrender.com/api/";
 
     useEffect(() => {
         const fetchUserData = async (token: string) => {

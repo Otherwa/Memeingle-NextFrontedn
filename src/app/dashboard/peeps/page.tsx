@@ -9,7 +9,7 @@ export default function Peeps() {
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    const APP_URL = "http://localhost:5000/";
+    const APP_URL = "https://memeingle-backend.onrender.com/api/";
 
     useEffect(() => {
         const token = localStorage.getItem('token');
