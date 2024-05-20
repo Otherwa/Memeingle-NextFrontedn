@@ -10,7 +10,7 @@ import { isMobile } from 'react-device-detect';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface Meme {
-    id: string;
+    _id: string;
     Title: string;
     Author: string;
     Url: string;
@@ -24,7 +24,7 @@ export default function Dashboard() {
     const [isFetchingMore, setIsFetchingMore] = useState(false);
     const [swingClass, setSwingClass] = useState('');
 
-    const APP_URL = "https://memeingle-backend.onrender.com/api/";
+    const APP_URL = process.env.NEXT_PUBLIC_API_URL;
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -125,7 +125,7 @@ export default function Dashboard() {
 
         direction === "right" ? setSwingClass('swingright') : setSwingClass('swingleft'); // Add swing class to trigger animation
 
-        const memeId = memes.length > 0 ? memes[0].id : "";
+        const memeId = memes.length > 0 ? memes[0]._id : "";
 
         setTimeout(() => {
             // remove top one
@@ -165,9 +165,9 @@ export default function Dashboard() {
                             className="flex flex-col items-center p-3 h-3/5 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 aspect-[3/4] m-2"
                         >
                             <TinderCard
-                                key={meme.id}
-                                onCardLeftScreen={(direction) => onCardLeftScreen(index, direction, meme.id)}
-                                onSwipe={isMobile ? (direction) => handleSwipe(direction, meme.id) : () => { }}
+                                key={meme._id}
+                                onCardLeftScreen={(direction) => onCardLeftScreen(index, direction, meme._id)}
+                                onSwipe={isMobile ? (direction) => handleSwipe(direction, meme._id) : () => { }}
                                 preventSwipe={['up', 'down']}
                                 className={index === 0 ? swingClass : ''} // Apply animation only to the first card
                             >
