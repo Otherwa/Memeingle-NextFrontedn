@@ -163,7 +163,7 @@ export default function ProfileUser() {
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 p-5 w-full" encType="multipart/form-data">
                         <div className="flex flex-col items-center">
                             <Avatar className="w-3/6 h-3/6">
-                                <AvatarImage src={base64} className="object-cover" />
+                                <AvatarImage src={base64 ? base64 : ""} className="object-cover" />
                                 <AvatarFallback>CN</AvatarFallback>
                             </Avatar>
                         </div>
