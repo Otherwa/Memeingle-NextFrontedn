@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Badge } from "@/components/ui/badge";
 import MemeStats from "./utils/memeStats";
+import Link from "next/link";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 interface userData {
     userStats: any;
@@ -52,7 +54,15 @@ export default function Profile() {
         <div>
             <div className="flex min-h-screen flex-col items-center p-6">
                 <div>
-                    <Badge variant="secondary">{userData.user.email}</Badge>
+                    <ToggleGroup variant="outline" type="single">
+                        <ToggleGroupItem value="email" aria-label="Toggle Email">
+                            {userData.user.email}
+                        </ToggleGroupItem>
+                        &nbsp;
+                        <ToggleGroupItem value="bold" aria-label="Toggle Profile">
+                            <Link href="/dashboard/profile/user">Profile</Link>
+                        </ToggleGroupItem>
+                    </ToggleGroup>
                 </div>
                 <div>
                     <MemeStats memes={userData.userStats} />

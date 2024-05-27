@@ -10,37 +10,40 @@ export default function DashboardNav() {
             <MenubarMenu>
                 <MenubarTrigger>You</MenubarTrigger>
                 <MenubarContent>
-                    <MenubarItem>
-                        <Link href="/dashboard/profile">
+                    <Link href="/dashboard/profile">
+                        <MenubarItem>
                             Profile
-                        </Link>{" "} <MenubarShortcut>🏠</MenubarShortcut>
-                    </MenubarItem>
+                            <MenubarShortcut>🏠</MenubarShortcut>
+                        </MenubarItem>
+                    </Link>
                 </MenubarContent>
             </MenubarMenu>
             <MenubarMenu>
                 <MenubarTrigger>Content</MenubarTrigger>
                 <MenubarContent>
-                    <MenubarItem>
-                        <Link href="/dashboard">
+                    <Link href="/dashboard">
+                        <MenubarItem>
                             Memes
-                        </Link>{" "} <MenubarShortcut>😂</MenubarShortcut>
-                    </MenubarItem>
-                    <MenubarItem>
-                        <Link href="/dashboard/peeps">
+                            <MenubarShortcut>😂</MenubarShortcut>
+                        </MenubarItem>
+                    </Link>
+                    <Link href="/dashboard/peeps">
+                        <MenubarItem>
                             Peeps
-                        </Link>{" "} <MenubarShortcut>👥</MenubarShortcut>
-                    </MenubarItem>
+                            <MenubarShortcut>👥</MenubarShortcut>
+                        </MenubarItem>
+                    </Link>
                 </MenubarContent>
             </MenubarMenu>
             <MenubarMenu>
                 <MenubarTrigger>Go To</MenubarTrigger>
                 <MenubarContent>
-                    <MenubarItem>
-                        <Link href="/dashboard/logout">
+                    <Link href="/dashboard/logout">
+                        <MenubarItem>
                             Logout
-                        </Link>{" "}
-                        <MenubarShortcut>👀</MenubarShortcut>
-                    </MenubarItem>
+                            <MenubarShortcut>👀</MenubarShortcut>
+                        </MenubarItem>
+                    </Link>
                 </MenubarContent>
             </MenubarMenu>
         </Menubar>

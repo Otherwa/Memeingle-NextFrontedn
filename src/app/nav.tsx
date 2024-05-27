@@ -6,41 +6,44 @@ export default function Navbar() {
             <MenubarMenu>
                 <MenubarTrigger>Home</MenubarTrigger>
                 <MenubarContent>
-                    <MenubarItem>
-                        <Link href="/">
+                    <Link href="/">
+                        <MenubarItem>
                             Home
-                        </Link>{" "} <MenubarShortcut>🏠</MenubarShortcut>
-                    </MenubarItem>
+                            <MenubarShortcut>🏠</MenubarShortcut>
+                        </MenubarItem>
+                    </Link>
                 </MenubarContent>
             </MenubarMenu>
             <MenubarMenu>
                 <MenubarTrigger>About</MenubarTrigger>
                 <MenubarContent>
-                    <MenubarItem>
-                        <Link href="/about">
+                    <Link href="/about">
+                        <MenubarItem>
                             Us
-                        </Link>{" "} <MenubarShortcut>👥</MenubarShortcut>
-                    </MenubarItem>
+                            <MenubarShortcut>👥</MenubarShortcut>
+                        </MenubarItem>
+                    </Link>
                     <MenubarItem>
-                        The Idea <MenubarShortcut>💡</MenubarShortcut>
+                        The Idea
+                        <MenubarShortcut>💡</MenubarShortcut>
                     </MenubarItem>
                 </MenubarContent>
             </MenubarMenu>
             <MenubarMenu>
                 <MenubarTrigger>Signup</MenubarTrigger>
                 <MenubarContent>
-                    <MenubarItem>
-                        <Link href="/signup">
+                    <Link href="/signup">
+                        <MenubarItem>
                             Register
-                        </Link>{" "}
-                        <MenubarShortcut>👀</MenubarShortcut>
-                    </MenubarItem>
-                    <MenubarItem>
-                        <Link href="/login">
+                            <MenubarShortcut>👀</MenubarShortcut>
+                        </MenubarItem>
+                    </Link>
+                    <Link href="/login">
+                        <MenubarItem>
                             Login
-                        </Link>{" "}
-                        <MenubarShortcut>😎</MenubarShortcut>
-                    </MenubarItem>
+                            <MenubarShortcut>😎</MenubarShortcut>
+                        </MenubarItem>
+                    </Link>
                 </MenubarContent>
             </MenubarMenu>
         </Menubar>
