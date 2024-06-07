@@ -98,6 +98,7 @@ export default function ProfileUser() {
         }
 
         setFile(e.target.files[0]);
+        setBase64(base64 as string);
     };
 
     const toBase64 = (file: File) => {
@@ -119,16 +120,21 @@ export default function ProfileUser() {
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             const token = localStorage.getItem('token');
-            const base64 = await toBase64(file as File);
+            let base64 = null;
+            let data = null;
 
-            setBase64(base64 as string);
-
-            const data = {
-                ...values,
-                avatar: base64
+            if (file) {
+                base64 = await toBase64(file);
+                setBase64(base64 as string);
+                data = {
+                    ...values,
+                    avatar: base64
+                }
+            } else {
+                data = {
+                    ...values,
+                }
             }
-
-            console.log(data)
 
             const response = await axios.post(
                 APP_URL + 'user',
