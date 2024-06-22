@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
+import { Skeleton } from '@/components/ui/skeleton';
 import axios from 'axios';
 import { Button } from "@/components/ui/button"
 import {
@@ -89,7 +90,7 @@ export default function ProfileUser() {
         } else {
             fetchUserData(token);
         }
-    }, [router]);
+    }, [form, router]);
 
     // When the file is selected, set the file state
     const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -156,8 +157,17 @@ export default function ProfileUser() {
     }
 
     if (loading) {
-        return <div className="flex min-h-screen flex-col items-center p-6">Loading...</div>;
+        return (
+            <div className="flex h-screen w-screen items-center justify-center space-x-4">
+                <Skeleton className="h-12 w-12 rounded-full" />
+                <div className="space-y-2">
+                    <Skeleton className="h-4 w-[250px]" />
+                    <Skeleton className="h-4 w-[200px]" />
+                </div>
+            </div>
+        );
     }
+
 
     return (
         <div className="flex min-h-screen flex-col items-center p-6">

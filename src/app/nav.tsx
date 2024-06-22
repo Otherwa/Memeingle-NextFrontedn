@@ -1,51 +1,78 @@
-import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarShortcut, MenubarTrigger } from "@/components/ui/menubar"
+"use client"
+
+import { Badge } from "@/components/ui/badge";
+import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "@/components/ui/navigation-menu";
 import Link from "next/link"
+
 export default function Navbar() {
     return (
-        <Menubar>
-            <MenubarMenu>
-                <MenubarTrigger>Home</MenubarTrigger>
-                <MenubarContent>
-                    <Link href="/">
-                        <MenubarItem>
-                            Home
-                            <MenubarShortcut>🏠</MenubarShortcut>
-                        </MenubarItem>
-                    </Link>
-                </MenubarContent>
-            </MenubarMenu>
-            <MenubarMenu>
-                <MenubarTrigger>About</MenubarTrigger>
-                <MenubarContent>
-                    <Link href="/about">
-                        <MenubarItem>
-                            Us
-                            <MenubarShortcut>👥</MenubarShortcut>
-                        </MenubarItem>
-                    </Link>
-                    <MenubarItem>
-                        The Idea
-                        <MenubarShortcut>💡</MenubarShortcut>
-                    </MenubarItem>
-                </MenubarContent>
-            </MenubarMenu>
-            <MenubarMenu>
-                <MenubarTrigger>Signup</MenubarTrigger>
-                <MenubarContent>
-                    <Link href="/signup">
-                        <MenubarItem>
-                            Register
-                            <MenubarShortcut>👀</MenubarShortcut>
-                        </MenubarItem>
-                    </Link>
-                    <Link href="/login">
-                        <MenubarItem>
-                            Login
-                            <MenubarShortcut>😎</MenubarShortcut>
-                        </MenubarItem>
-                    </Link>
-                </MenubarContent>
-            </MenubarMenu>
-        </Menubar>
+        <NavigationMenu>
+            <NavigationMenuList>
+                <NavigationMenuItem>
+                    <NavigationMenuTrigger>Home</NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                        <ul className="grid gap-3 p-6 md:w-[250px] lg:w-[300px]">
+                            <li>
+                                <Badge variant="secondary" className="hover:scale-105 transition-transform duration-200 ease-in-out">
+                                    <Link href="/" passHref className="text-sm">
+                                        <NavigationMenuLink>
+                                            Home <span role="img" aria-label="home">🏠</span>
+                                        </NavigationMenuLink>
+                                    </Link>
+                                </Badge>
+                            </li>
+                        </ul>
+                    </NavigationMenuContent>
+                </NavigationMenuItem>
+
+                <NavigationMenuItem>
+                    <NavigationMenuTrigger>About</NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                        <ul className="grid gap-3 p-6 md:w-[250px] lg:w-[300px]">
+                            <li>
+                                <Badge variant="secondary" className="hover:scale-105 transition-transform duration-200 ease-in-out">
+                                    <Link href="/about" passHref className="text-sm">
+                                        <NavigationMenuLink>
+                                            Us <span role="img" aria-label="us">👥</span>
+                                        </NavigationMenuLink>
+                                    </Link>
+                                </Badge>
+                            </li>
+                            <li>
+                                <Badge variant="secondary" className=" text-sm hover:scale-105 transition-transform duration-200 ease-in-out">
+                                    The Idea <span role="img" aria-label="idea">💡</span>
+                                </Badge>
+                            </li>
+                        </ul>
+                    </NavigationMenuContent>
+                </NavigationMenuItem>
+
+                <NavigationMenuItem>
+                    <NavigationMenuTrigger>Signup</NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                        <ul className="grid gap-3 p-6 md:w-[250px] lg:w-[300px]">
+                            <li>
+                                <Badge variant="secondary" className="hover:scale-105 transition-transform duration-200 ease-in-out">
+                                    <Link href="/signup" className="text-sm">
+                                        <NavigationMenuLink>
+                                            Register <span role="img" aria-label="register">👀</span>
+                                        </NavigationMenuLink>
+                                    </Link>
+                                </Badge>
+                            </li>
+                            <li>
+                                <Badge variant="secondary" className="hover:scale-105 transition-transform duration-200 ease-in-out">
+                                    <Link href="/login" className="text-sm">
+                                        <NavigationMenuLink>
+                                            Login <span role="img" aria-label="login">😎</span>
+                                        </NavigationMenuLink>
+                                    </Link>
+                                </Badge>
+                            </li>
+                        </ul>
+                    </NavigationMenuContent>
+                </NavigationMenuItem>
+            </NavigationMenuList>
+        </NavigationMenu>
     );
 }

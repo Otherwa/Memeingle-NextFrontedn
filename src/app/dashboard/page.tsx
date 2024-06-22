@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/button';
 import '@/styles/style.css'; // Import the CSS file
 import { isMobile } from 'react-device-detect';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface Meme {
     _id: string;
@@ -148,7 +150,13 @@ export default function Dashboard() {
                 Memes
             </h1>
             {isLoading ? (
-                <div className="flex min-h-screen flex-col items-center p-6">Loading...</div>
+                <div className="flex h-screen w-screen items-center justify-center space-x-4">
+                    <Skeleton className="h-12 w-12 rounded-full" />
+                    <div className="space-y-2">
+                        <Skeleton className="h-4 w-[250px]" />
+                        <Skeleton className="h-4 w-[200px]" />
+                    </div>
+                </div>
             ) : (
                 <div className="flex min-h-screen flex-col items-center p-6">
                     <div className="flex flex-row items-center p-6 gap-4">
@@ -178,13 +186,18 @@ export default function Dashboard() {
                                     </CardHeader>
                                     <CardContent className="flex-grow">
                                         <div className="w-full h-full overflow-hidden">
-                                            <img src={meme.Url} alt="Meme" className="w-full h-full object-contain" />
+                                            <img
+                                                src={meme.Url}
+                                                alt="Meme"
+                                                className="w-full h-full object-contain sm:object-cover md:object-contain lg:object-cover"
+                                            />
                                         </div>
                                     </CardContent>
                                     <CardFooter>
-                                        <p>Upvotes : {meme.UpVotes}</p>
+                                        <Badge variant="secondary">Up Votes : {meme.UpVotes}</Badge>
                                     </CardFooter>
                                 </Card>
+
                             </TinderCard>
                         </div>
                     ))}

@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import MemeStats from "./utils/memeStats";
 import Link from "next/link";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
@@ -47,7 +47,15 @@ export default function Profile() {
     }, [router]); // Empty dependency array ensures this effect runs only once
 
     if (loading) {
-        return <div className="flex min-h-screen flex-col items-center p-6">Loading...</div>;
+        return (
+            <div className="flex h-screen w-screen items-center justify-center space-x-4">
+                <Skeleton className="h-12 w-12 rounded-full" />
+                <div className="space-y-2">
+                    <Skeleton className="h-4 w-[250px]" />
+                    <Skeleton className="h-4 w-[200px]" />
+                </div>
+            </div>
+        );
     }
 
     return (

@@ -35,7 +35,7 @@ export default function Peeps() {
         } else {
             fetchUserData(token)
         }
-    }, [router]); // Empty dependency array ensures this effect runs only once
+    }, [router]);
 
     const getAvatarInitials = (name: string) => {
         if (!name) return '';
@@ -45,7 +45,7 @@ export default function Peeps() {
     return (
         <div>
             <div className="p-5">
-                <h1>Peeps</h1>
+                <h1 className="text-2xl text-red-600 font-bold flex items-center justify-center space-x-4">Peeps</h1>
                 <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3">
                     {userData.map((user: any) => (
                         <Card key={user._id} className="p-4 m-4">
