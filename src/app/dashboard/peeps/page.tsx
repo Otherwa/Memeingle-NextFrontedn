@@ -10,7 +10,7 @@ export default function Peeps() {
     const router = useRouter();
     const [userData, setUserData] = useState<any>([]);
 
-    const APP_URL = "https://memeingle-backend.onrender.com/api/";
+    const APP_URL = "http://localhost:5000/api/";
 
     useEffect(() => {
         const fetchUserData = async (token: string) => {

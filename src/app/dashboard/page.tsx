@@ -1,82 +1,30 @@
 "use client";
 
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import TinderCard from 'react-tinder-card';
-import axios from 'axios';
 import { Button } from '@/components/ui/button';
-import '@/styles/style.css'; // Import the CSS file
 import { isMobile } from 'react-device-detect';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import '@/styles/style.css'; // Import the CSS file
+import { useRouter } from 'next/navigation';
 import { Skeleton } from '@/components/ui/skeleton';
-
-interface Meme {
-    _id: string;
-    Title: string;
-    Author: string;
-    Url: string;
-    UpVotes: string;
-}
+import { useCheckAuth, fetchMemes, fetchMoreMemes, likeMeme } from '@/app/authStore/userActions';
+import { Meme } from './profile/utils/Meme';
 
 export default function Dashboard() {
-    const router = useRouter();
+    useCheckAuth();
+
     const [memes, setMemes] = useState<Meme[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isFetchingMore, setIsFetchingMore] = useState(false);
     const [swingClass, setSwingClass] = useState('');
-
-    const APP_URL = "https://memeingle-backend.onrender.com/api/";
-
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            router.push('/login');
-        }
-    }, [router]);
+    const router = useRouter();
 
     useEffect(() => {
-        const fetchData = async (token: string) => {
-            try {
-                const response = await axios.get(APP_URL + 'memelist', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                setMemes(response.data);
-            } catch (error) {
-                console.error('Error fetching memes:', error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            router.push('/login');
-        } else {
-            fetchData(token);
-        }
+        fetchMemes(setMemes, setIsLoading, router);
     }, [router]);
-
-    const fetchMoreMemes = async () => {
-        if (isFetchingMore) return; // Prevent multiple fetches
-        setIsFetchingMore(true);
-        const token = localStorage.getItem('token');
-        try {
-            const response = await axios.get(APP_URL + 'memelist', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            setMemes(prevMemes => [...prevMemes, ...response.data]);
-        } catch (error) {
-            console.error('Error fetching more memes:', error);
-        } finally {
-            setIsFetchingMore(false);
-        }
-    };
 
     const handleSwipe = (direction: string, memeId: string) => {
         console.log(`Swiped ${direction} on meme with ID ${memeId}`);
@@ -93,25 +41,10 @@ export default function Dashboard() {
         setMemes(prevMemes => {
             const newMemes = prevMemes.filter((_, i) => i !== index);
             if (newMemes.length < 3 && !isFetchingMore) { // Fetch more memes if less than 3 are left
-                fetchMoreMemes();
+                fetchMoreMemes(setMemes, setIsFetchingMore);
             }
             return newMemes;
         });
-    };
-
-    const likeMeme = async (memeId: string) => {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await axios.post(APP_URL + `like/${memeId}`, {}, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            const data = response.data;
-            console.log(data);
-        } catch (error) {
-            console.error('Error liking meme:', error);
-        }
     };
 
     const dislikeMeme = async (memeId: string) => {
@@ -134,7 +67,7 @@ export default function Dashboard() {
             setMemes(prevMemes => {
                 const newMemes = prevMemes.slice(1);
                 if (newMemes.length < 3 && !isFetchingMore) { // Fetch more memes if less than 3 are left
-                    fetchMoreMemes();
+                    fetchMoreMemes(setMemes, setIsFetchingMore);
                 }
                 return newMemes;
             });
@@ -150,11 +83,13 @@ export default function Dashboard() {
                 Memes
             </h1>
             {isLoading ? (
-                <div className="flex h-screen w-screen items-center justify-center space-x-4">
-                    <Skeleton className="h-12 w-12 rounded-full" />
-                    <div className="space-y-2">
-                        <Skeleton className="h-4 w-[250px]" />
-                        <Skeleton className="h-4 w-[200px]" />
+                <div className="flex h-screen w-full items-center justify-center flex-col space-y-4 gap-4">
+                    <div className="flex flex-col space-y-3">
+                        <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+                        <div className="space-y-2">
+                            <Skeleton className="h-4 w-[250px]" />
+                            <Skeleton className="h-4 w-[200px]" />
+                        </div>
                     </div>
                 </div>
             ) : (
@@ -185,11 +120,13 @@ export default function Dashboard() {
                                         <CardDescription>{meme.Author}</CardDescription>
                                     </CardHeader>
                                     <CardContent className="flex-grow">
-                                        <div className="w-full h-full overflow-hidden">
-                                            <img
+                                        <div className="relative w-56 md:w-96" style={{ paddingBottom: "108.78%" }}>
+                                            <Image
                                                 src={meme.Url}
                                                 alt="Meme"
-                                                className="w-full h-full object-contain sm:object-cover md:object-contain lg:object-cover"
+                                                layout="fill"
+                                                objectFit="contain"
+                                                className="rounded-lg"
                                             />
                                         </div>
                                     </CardContent>

@@ -1,10 +1,9 @@
 "use client"
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import axios from 'axios';
 import { Button } from "@/components/ui/button"
 import {
     Form,
@@ -16,11 +15,10 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useRouter } from 'next/navigation'
+import { registerUser } from '@/app/authStore/userAuth'
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 
-const APP_URL = "https://memeingle-backend.onrender.com/api/"
 
 const formSchema = z.object({
     email: z.string().email({
@@ -36,18 +34,8 @@ const formSchema = z.object({
 
 export default function SignupForm() {
     const [errorMessage, setMessage] = useState("");
-
+    const [isOpen, setIsOpen] = useState(true);
     const router = useRouter();
-
-    useEffect(() => {
-        if (errorMessage) {
-            const timer = setTimeout(() => {
-                setMessage("");
-            }, 2000);
-
-            return () => clearTimeout(timer);
-        }
-    }, [errorMessage]);
 
     // 1. Define your form.
     const form = useForm<z.infer<typeof formSchema>>({
@@ -63,23 +51,15 @@ export default function SignupForm() {
     async function onSubmit(values: z.infer<typeof formSchema>) {
         // Do something with the form values.
         // ✅ This will be type-safe and validated.
-
-
         console.log(values)
-        const { email, password, confirmPassword } = values;
-        try {
-            if (password === confirmPassword) {
-                const response = await axios.post(APP_URL + '/register', { email, password, confirmPassword });
-                const { message } = response.data;
-                setMessage(message);
-                router.push('/login')
-            }
-            else {
-                setMessage("Password Not Same");
-            }
-        } catch (error: any) {
-            console.error('Registration failed:', error.response.data.message);
-            setMessage(error.response.data.message);
+        const result = await registerUser(values);
+        if (result.success) {
+            setMessage(result.message);
+            // Redirect to login page
+            router.push('/login');
+        } else {
+            setMessage(result.message);
+            setIsOpen(true)
         }
     }
 
@@ -88,10 +68,20 @@ export default function SignupForm() {
             <div className="p-3">
                 {/* Display the error message if registration fails */}
                 {errorMessage && (
-                    <Alert className="m-4">
-                        <AlertTitle>Info</AlertTitle>
-                        <AlertDescription>{errorMessage}</AlertDescription>
-                    </Alert>
+                    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    Oh no 🤔 {errorMessage}.
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel className="text-red-600" onClick={() => setIsOpen(false)}>Cancel</AlertDialogCancel>
+                                <AlertDialogAction >Continue</AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
                 )}
             </div>
             <div className="w-full lg:w-1/2">

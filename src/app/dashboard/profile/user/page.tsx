@@ -19,7 +19,6 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useRouter } from 'next/navigation'
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -53,7 +52,7 @@ export default function ProfileUser() {
     // State to store the base64
     const [base64, setBase64] = useState<string | null>(null);
 
-    const APP_URL = "https://memeingle-backend.onrender.com/api/";
+    const APP_URL = "http://localhost:5000/api/";
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema)
@@ -158,11 +157,13 @@ export default function ProfileUser() {
 
     if (loading) {
         return (
-            <div className="flex h-screen w-screen items-center justify-center space-x-4">
-                <Skeleton className="h-12 w-12 rounded-full" />
-                <div className="space-y-2">
-                    <Skeleton className="h-4 w-[250px]" />
-                    <Skeleton className="h-4 w-[200px]" />
+            <div className="flex h-screen w-full items-center justify-center flex-col space-y-4 gap-4">
+                <div className="flex flex-col space-y-3">
+                    <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+                    <div className="space-y-2">
+                        <Skeleton className="h-4 w-[250px]" />
+                        <Skeleton className="h-4 w-[200px]" />
+                    </div>
                 </div>
             </div>
         );
@@ -272,7 +273,7 @@ export default function ProfileUser() {
                             )}
                         />
 
-                        <Button type="submit">Login</Button>
+                        <Button type="submit">Make It 🤩</Button>
                     </form>
                 </Form>
 

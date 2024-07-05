@@ -1,10 +1,9 @@
 "use client"
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import axios from 'axios';
 import { Button } from "@/components/ui/button"
 import {
     Form,
@@ -16,11 +15,9 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useRouter } from 'next/navigation'
-
-const APP_URL = "https://memeingle-backend.onrender.com/api/"
+import { loginUser } from '@/app/authStore/userAuth'
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 
 const formSchema = z.object({
     email: z.string().email({
@@ -32,19 +29,9 @@ const formSchema = z.object({
 });
 
 export default function LoginForm() {
-    const [errorMessage, setMessage] = useState(null);
-
+    const [errorMessage, setErrorMessage] = useState(null);
+    const [isOpen, setIsOpen] = useState(true);
     const router = useRouter();
-
-    useEffect(() => {
-        if (errorMessage) {
-            const timer = setTimeout(() => {
-                setMessage(null);
-            }, 2000);
-
-            return () => clearTimeout(timer);
-        }
-    }, [errorMessage]);
 
     // 1. Define your form.
     const form = useForm<z.infer<typeof formSchema>>({
@@ -57,21 +44,13 @@ export default function LoginForm() {
 
     // 2. Define a submit handler.
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        console.log(values)
-        const { email, password } = values;
-        try {
-
-            const response = await axios.post(APP_URL + '/login', { email, password });
-            const { token } = response.data;
-            // Save token to local storage
-            localStorage.setItem('token', token);
+        const result = await loginUser(values);
+        if (result.success) {
             // Redirect to dashboard page
             router.push('/dashboard');
-        } catch (error: any) {
-            console.error('Registration failed:', error.response.data.message);
-            setMessage(error.response.data.message);
+        } else {
+            setErrorMessage(result.message);
+            setIsOpen(true);
         }
     }
 
@@ -80,10 +59,20 @@ export default function LoginForm() {
             <div className="p-3">
                 {/* Display the error message if registration fails */}
                 {errorMessage && (
-                    <Alert className="m-4">
-                        <AlertTitle>Info</AlertTitle>
-                        <AlertDescription>{errorMessage}</AlertDescription>
-                    </Alert>
+                    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    Oh no 🤔 {errorMessage}.
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel className="text-red-600" onClick={() => setIsOpen(false)}>Cancel</AlertDialogCancel>
+                                <AlertDialogAction>Continue</AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
                 )}
             </div>
             <div className="w-full lg:w-1/2">
