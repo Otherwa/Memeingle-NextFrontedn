@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const APP_URL = "http://localhost:5000/api/";
+const APP_URL = "https://memeingle-backend.onrender.com/api/";
 
 export const loginUser = async (values) => {
     const { email, password } = values;

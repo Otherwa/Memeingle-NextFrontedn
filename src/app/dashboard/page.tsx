@@ -1,7 +1,7 @@
 "use client";
 
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import TinderCard from 'react-tinder-card';
 import { Button } from '@/components/ui/button';
 import { isMobile } from 'react-device-detect';
@@ -22,7 +22,7 @@ export default function Dashboard() {
     const [swingClass, setSwingClass] = useState('');
     const router = useRouter();
 
-    useEffect(() => {
+    useMemo(() => {
         fetchMemes(setMemes, setIsLoading, router);
     }, [router]);
 
@@ -40,7 +40,7 @@ export default function Dashboard() {
         console.log(`Card left screen at index ${index} ${direction} ${memeId}`);
         setMemes(prevMemes => {
             const newMemes = prevMemes.filter((_, i) => i !== index);
-            if (newMemes.length < 3 && !isFetchingMore) { // Fetch more memes if less than 3 are left
+            if (newMemes.length < 3 && !isFetchingMore) { // ? Fetch more memes if less than 3 are left
                 fetchMoreMemes(setMemes, setIsFetchingMore);
             }
             return newMemes;
@@ -58,20 +58,18 @@ export default function Dashboard() {
     const swipe = (direction: string) => {
         if (memes.length === 0) return;
 
-        direction === "right" ? setSwingClass('swingright') : setSwingClass('swingleft'); // Add swing class to trigger animation
+        direction === "right" ? setSwingClass('swingright') : setSwingClass('swingleft'); // ? Add swing class to trigger animation
 
         const memeId = memes.length > 0 ? memes[0]._id : "";
 
         setTimeout(() => {
-            // remove top one
             setMemes(prevMemes => {
                 const newMemes = prevMemes.slice(1);
-                if (newMemes.length < 3 && !isFetchingMore) { // Fetch more memes if less than 3 are left
+                if (newMemes.length < 3 && !isFetchingMore) { // ? Fetch more memes if less than 3 are left
                     fetchMoreMemes(setMemes, setIsFetchingMore);
                 }
                 return newMemes;
             });
-
             handleSwipe(direction, memeId);
             setSwingClass('');
         }, 500);
@@ -116,8 +114,12 @@ export default function Dashboard() {
                             >
                                 <Card className="h-full w-full flex flex-col">
                                     <CardHeader>
-                                        <CardTitle>{meme.Title}</CardTitle>
-                                        <CardDescription>{meme.Author}</CardDescription>
+                                        <CardTitle className='m-2'>{meme.Title}</CardTitle>
+                                        <CardDescription>
+                                            <Badge className='m-2'>
+                                                {meme.Author}
+                                            </Badge>
+                                        </CardDescription>
                                     </CardHeader>
                                     <CardContent className="flex-grow">
                                         <div className="relative w-56 md:w-96" style={{ paddingBottom: "108.78%" }}>
@@ -126,12 +128,16 @@ export default function Dashboard() {
                                                 alt="Meme"
                                                 layout="fill"
                                                 objectFit="contain"
-                                                className="rounded-lg"
+                                                unoptimized
+                                                className="rounded-lg m-2"
+                                                style={{ borderRadius: "1.5rem" }}
                                             />
                                         </div>
                                     </CardContent>
                                     <CardFooter>
-                                        <Badge variant="secondary">Up Votes : {meme.UpVotes}</Badge>
+                                        <CardDescription>
+                                            <Badge variant="secondary" className='m-2'>Up Votes : {meme.UpVotes}</Badge>
+                                        </CardDescription>
                                     </CardFooter>
                                 </Card>
 

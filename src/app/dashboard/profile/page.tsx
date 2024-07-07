@@ -1,12 +1,13 @@
 "use client"
 
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useMemo, useState } from 'react';
 import { Skeleton } from "@/components/ui/skeleton";
 import MemeStats from "./utils/memeStats";
 import Link from "next/link";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { useCheckAuth } from "@/app/authStore/userActions";
+import { fetchUserData } from "@/app/authStore/userActions";
+import { Input } from "@/components/ui/input";
 
 interface userData {
     userStats: any;
@@ -14,37 +15,23 @@ interface userData {
 }
 
 export default function Profile() {
-    const router = useRouter();
+    useCheckAuth();
+
     const [userData, setUserData] = useState<userData>({ userStats: [], user: [] });
     const [loading, setLoading] = useState(true);
+    const [searchQuery, setSearchQuery] = useState("");
 
-    const APP_URL = "https://memeingle-backend.onrender.com/api/";
+    useMemo(() => {
+        fetchUserData(setUserData, setLoading);
+    }, []);
 
-    useEffect(() => {
-        const fetchUserData = async (token: string) => {
-            try {
-                const response = await axios.get(APP_URL + 'user', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
+    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchQuery(event.target.value);
+    };
 
-                const data = response.data;
-                console.log(data);
-                setUserData(data);
-                setLoading(false);
-            } catch (error) {
-                console.error('Error fetching user data:', error);
-            }
-        };
-
-        const token = localStorage.getItem('token');
-        if (!token) {
-            router.push('/login');
-        } else {
-            fetchUserData(token);
-        }
-    }, [router]); // Empty dependency array ensures this effect runs only once
+    const filteredMemes = userData.userStats.filter((meme: any) =>
+        meme.Title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     if (loading) {
         return (
@@ -62,8 +49,8 @@ export default function Profile() {
 
     return (
         <div>
-            <div className="flex min-h-screen flex-col items-center p-6">
-                <div>
+            <div className="flex min-h-screen flex-col items-center p-6 mb-12">
+                <div className="mb-10">
                     <ToggleGroup variant="outline" type="single">
                         <ToggleGroupItem value="email" aria-label="Toggle Email">
                             {userData.user.email}
@@ -76,8 +63,18 @@ export default function Profile() {
                         </Link>
                     </ToggleGroup>
                 </div>
+                <br />
+                <div className="w-1/2">
+                    <Input
+                        type="text"
+                        placeholder="Search memes..."
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                        className="mb-6"
+                    />
+                </div>
                 <div>
-                    <MemeStats memes={userData.userStats} />
+                    <MemeStats memes={filteredMemes} />
                 </div>
             </div>
         </div>

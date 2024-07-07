@@ -1,13 +1,11 @@
-"use client"
-
+"use client";
 
 import { useState, useEffect } from 'react';
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { Skeleton } from '@/components/ui/skeleton';
-import axios from 'axios';
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
     Form,
     FormControl,
@@ -16,18 +14,13 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-
-import { useRouter } from 'next/navigation'
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useRouter } from 'next/navigation';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-
-interface UserData {
-    userStats: any;
-    user: any;
-}
+import { fetchUserProfileData, toBase64, submitForm } from '@/app/authStore/userActions';
 
 const formSchema = z.object({
     email: z.string().email({
@@ -39,121 +32,41 @@ const formSchema = z.object({
     avatar: z.any().optional()
 });
 
-
-
 export default function ProfileUser() {
     const router = useRouter();
-    const [userData, setUserData] = useState<UserData>({ userStats: [], user: [] });
+    const [userData, setUserData] = useState({ userStats: [], user: [] });
     const [loading, setLoading] = useState(true);
 
     // file
-    // State to store the file
-    const [file, setFile] = useState<File | null>(null);
-    // State to store the base64
-    const [base64, setBase64] = useState<string | null>(null);
+    const [file, setFile] = useState(null);
+    const [base64, setBase64] = useState(null);
 
-    const APP_URL = "http://localhost:5000/api/";
-
-    const form = useForm<z.infer<typeof formSchema>>({
+    const form = useForm({
         resolver: zodResolver(formSchema)
-    })
+    });
 
     useEffect(() => {
-        const fetchUserData = async (token: string) => {
-            try {
-                const response = await axios.get(APP_URL + 'user', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                const data = response.data;
-                console.log(data);
-                setUserData(data);
-
-                // set form data
-                form.setValue('email', data.user.email);
-                form.setValue('hobbies', data.user.hobbies);
-                form.setValue('bio', data.user.bio);
-                form.setValue('gender', data.user.gender);
-                setBase64(data.user.avatar as string);
-
-                setLoading(false);
-            } catch (error) {
-                console.error('Error fetching user data:', error);
-            }
-        };
-
         const token = localStorage.getItem('token');
         if (!token) {
             router.push('/login');
         } else {
-            fetchUserData(token);
+            fetchUserProfileData(token, setUserData, form, setBase64, setLoading);
         }
     }, [form, router]);
 
-    // When the file is selected, set the file state
-    const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const onFileChange = (e: any) => {
         if (!e.target.files) {
             return null;
         }
 
         setFile(e.target.files[0]);
-        setBase64(base64 as string);
+        setBase64(base64);
     };
 
-    const toBase64 = (file: File) => {
-        return new Promise((resolve, reject) => {
-            const fileReader = new FileReader();
-
-            fileReader.readAsDataURL(file);
-
-            fileReader.onload = () => {
-                resolve(fileReader.result);
-            };
-
-            fileReader.onerror = (error) => {
-                reject(error);
-            };
-        });
+    const onSubmit = async (values: any) => {
+        const token = localStorage.getItem('token');
+        await submitForm(values, token, file, setBase64);
     };
-
-    const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        try {
-            const token = localStorage.getItem('token');
-            let base64 = null;
-            let data = null;
-
-            if (file) {
-                base64 = await toBase64(file);
-                setBase64(base64 as string);
-                data = {
-                    ...values,
-                    avatar: base64
-                }
-            } else {
-                data = {
-                    ...values,
-                }
-            }
-
-            const response = await axios.post(
-                APP_URL + 'user',
-                {
-                    "data": data
-                },
-                {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                }
-            );
-
-            console.log(response)
-        } catch (error: any) {
-            console.error('Login failed:', error);
-            // Set error message here and display it to the user
-        }
-    }
 
     if (loading) {
         return (
@@ -169,36 +82,36 @@ export default function ProfileUser() {
         );
     }
 
-
     return (
         <div className="flex min-h-screen flex-col items-center p-6">
-            <div className="p-3">
-                {/* Display the error message if login fails */}
-            </div>
             <div className="w-full lg:w-1/2">
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 p-5 w-full" encType="multipart/form-data">
-                        <div className="flex flex-col items-center">
-                            <Avatar className="w-3/6 h-3/6">
-                                <AvatarImage src={base64 ? base64 : ""} className="object-cover" />
-                                <AvatarFallback>CN</AvatarFallback>
-                            </Avatar>
+                        <div>
+                            <label className="flex flex-col items-center w-auto" htmlFor="avatar-upload">
+                                <Avatar className="w-3/6 h-3/6 cursor-pointer">
+                                    <AvatarImage src={base64 ? base64 : ""} className="object-cover" />
+                                    <AvatarFallback>CN</AvatarFallback>
+                                </Avatar>
+                            </label>
+                            <FormField
+                                name="avatar"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormControl>
+                                            <Input
+                                                id="avatar-upload"
+                                                type="file"
+                                                accept="image/*"
+                                                {...field}
+                                                onChange={(e) => onFileChange(e)}
+                                                style={{ display: 'none' }}
+                                            />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
                         </div>
-                        <FormField
-                            name="avatar"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Profile Photo</FormLabel>
-                                    <FormControl>
-                                        <Input type="file" accept="image/*" {...field} onChange={(e) => onFileChange(e)} />
-                                    </FormControl>
-                                    <FormDescription>
-                                        Upload your profile photo/avatar
-                                    </FormDescription>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
                         <FormField
                             control={form.control}
                             name="email"
@@ -276,8 +189,7 @@ export default function ProfileUser() {
                         <Button type="submit">Make It 🤩</Button>
                     </form>
                 </Form>
-
             </div>
-        </div >
+        </div>
     );
 }
