@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
-const APP_URL = "https://memeingle-backend.onrender.com/api/";
+const APP_URL = process.env.NEXT_PUBLIC_PUBLICAPI_KEY;
 
 // ? Main Authentication
 
@@ -197,13 +197,29 @@ export const getAvatarInitials = (name) => {
 };
 
 export const getSimilarityDescription = (score) => {
-    if (score >= 0.9) {
-        return 'Best Fit';
-    } else if (score >= 0.7) {
-        return 'Impressive';
-    } else if (score >= 0.5) {
-        return 'Good';
-    } else {
-        return 'Needs Improvement';
+    // Round the score to one decimal place
+    const roundedScore = Math.round(score * 10) / 10;
+
+    switch (true) {
+        case (roundedScore >= 0.9):
+            return { description: 'Excellent', className: 'text-green-600' };
+        case (roundedScore >= 0.8):
+            return { description: 'Best Fit', className: 'text-blue-600' };
+        case (roundedScore >= 0.7):
+            return { description: 'Impressive', className: 'text-purple-600' };
+        case (roundedScore >= 0.6):
+            return { description: 'Good', className: 'text-teal-600' };
+        case (roundedScore >= 0.5):
+            return { description: 'Average', className: 'text-yellow-600' };
+        case (roundedScore >= 0.4):
+            return { description: 'Needs Improvement', className: 'text-orange-600' };
+        case (roundedScore >= 0.3):
+            return { description: 'Poor', className: 'text-red-600' };
+        case (roundedScore >= 0.2):
+            return { description: 'Very Poor', className: 'text-red-800' };
+        case (roundedScore >= 0.1):
+            return { description: 'Unacceptable', className: 'text-gray-600' };
+        default:
+            return { description: 'Very Unacceptable', className: 'text-gray-400' };
     }
-};
+}

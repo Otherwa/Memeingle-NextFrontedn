@@ -38,8 +38,8 @@ export default function ProfileUser() {
     const [loading, setLoading] = useState(true);
 
     // file
-    const [file, setFile] = useState(null);
-    const [base64, setBase64] = useState(null);
+    const [file, setFile] = useState<File | null>(null);
+    const [base64, setBase64] = useState<string | null>(null);
 
     const form = useForm({
         resolver: zodResolver(formSchema)
@@ -54,13 +54,19 @@ export default function ProfileUser() {
         }
     }, [form, router]);
 
-    const onFileChange = (e: any) => {
+    const onFileChange = async (e: any) => {
         if (!e.target.files) {
-            return null;
+            return;
         }
 
-        setFile(e.target.files[0]);
-        setBase64(base64);
+        const selectedFile = e.target.files[0];
+        setFile(selectedFile);
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setBase64(reader.result as string);
+        };
+        reader.readAsDataURL(selectedFile);
     };
 
     const onSubmit = async (values: any) => {
@@ -89,7 +95,7 @@ export default function ProfileUser() {
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 p-5 w-full" encType="multipart/form-data">
                         <div>
                             <label className="flex flex-col items-center w-auto" htmlFor="avatar-upload">
-                                <Avatar className="w-3/6 h-3/6 cursor-pointer">
+                                <Avatar className="w-[12rem] h-[12rem] cursor-pointer">
                                     <AvatarImage src={base64 ? base64 : ""} className="object-cover" />
                                     <AvatarFallback>CN</AvatarFallback>
                                 </Avatar>

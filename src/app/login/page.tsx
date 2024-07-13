@@ -55,7 +55,7 @@ export default function LoginForm() {
     }
 
     return (
-        <div className="flex min-h-screen flex-col items-center p-6">
+        <div className="flex min-h-screen flex-col items-center p-6 ">
             <div className="p-3">
                 {/* Display the error message if registration fails */}
                 {errorMessage && (
@@ -75,9 +75,12 @@ export default function LoginForm() {
                     </AlertDialog>
                 )}
             </div>
-            <div className="w-full lg:w-1/2">
+            <div className="w-full lg:w-1/2 border-2 rounded-lg border-l-3 border-r-3 border-dashed border-black">
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 p-5 w-full">
+                        <span>
+                            <h1 className="mt-2 p-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Login</h1>
+                        </span>
                         <FormField
                             control={form.control}
                             name="email"

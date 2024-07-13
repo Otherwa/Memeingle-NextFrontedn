@@ -13,7 +13,7 @@ export default function Navbar() {
                     <NavigationMenuContent>
                         <ul className="grid gap-3 p-6 md:w-[250px] lg:w-[300px]">
                             <li>
-                                <Badge variant="secondary" className="hover:scale-105 transition-transform duration-200 ease-in-out">
+                                <Badge variant="secondary" className="hover:bg-gray-200 transition-colors duration-200 ease-in-out">
                                     <Link href="/" passHref className="text-sm">
                                         <NavigationMenuLink>
                                             Home <span role="img" aria-label="home">🏠</span>
@@ -28,9 +28,9 @@ export default function Navbar() {
                 <NavigationMenuItem>
                     <NavigationMenuTrigger>About</NavigationMenuTrigger>
                     <NavigationMenuContent>
-                        <ul className="grid gap-3 p-6 md:w-[250px] lg:w-[300px]">
+                        <ul className="grid gap-3 p-6 md:w-[350px] lg:w-[300px]">
                             <li>
-                                <Badge variant="secondary" className="hover:scale-105 transition-transform duration-200 ease-in-out">
+                                <Badge variant="secondary" className="hover:bg-gray-200 transition-colors duration-200 ease-in-out">
                                     <Link href="/about" passHref className="text-sm">
                                         <NavigationMenuLink>
                                             Us <span role="img" aria-label="us">👥</span>
@@ -39,8 +39,10 @@ export default function Navbar() {
                                 </Badge>
                             </li>
                             <li>
-                                <Badge variant="secondary" className=" text-sm hover:scale-105 transition-transform duration-200 ease-in-out">
-                                    The Idea <span role="img" aria-label="idea">💡</span>
+                                <Badge variant="secondary" className="hover:bg-gray-200 transition-colors duration-200 ease-in-out">
+                                    <NavigationMenuLink className="text-sm">
+                                        The Idea <span role="img" aria-label="idea">💡</span>
+                                    </NavigationMenuLink>
                                 </Badge>
                             </li>
                         </ul>
@@ -52,7 +54,7 @@ export default function Navbar() {
                     <NavigationMenuContent>
                         <ul className="grid gap-3 p-6 md:w-[250px] lg:w-[300px]">
                             <li>
-                                <Badge variant="secondary" className="hover:scale-105 transition-transform duration-200 ease-in-out">
+                                <Badge variant="secondary" className="hover:bg-gray-200 transition-colors duration-200 ease-in-out">
                                     <Link href="/signup" className="text-sm">
                                         <NavigationMenuLink>
                                             Register <span role="img" aria-label="register">👀</span>
@@ -61,7 +63,7 @@ export default function Navbar() {
                                 </Badge>
                             </li>
                             <li>
-                                <Badge variant="secondary" className="hover:scale-105 transition-transform duration-200 ease-in-out">
+                                <Badge variant="secondary" className="hover:bg-gray-200 transition-colors duration-200 ease-in-out">
                                     <Link href="/login" className="text-sm">
                                         <NavigationMenuLink>
                                             Login <span role="img" aria-label="login">😎</span>

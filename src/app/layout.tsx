@@ -1,7 +1,5 @@
-import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "./nav";
 
 
 
@@ -46,6 +44,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <title>
+          Memeingle
+        </title>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+      </head>
       <body className={inter.className} suppressHydrationWarning={true}>
         <div>
           {children}

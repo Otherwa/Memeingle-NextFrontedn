@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const APP_URL = "https://memeingle-backend.onrender.com/api/";
+const APP_URL = process.env.NEXT_PUBLIC_PUBLICAPI_KEY;
 
 export const loginUser = async (values) => {
     const { email, password } = values;

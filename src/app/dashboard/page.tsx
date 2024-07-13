@@ -77,7 +77,7 @@ export default function Dashboard() {
 
     return (
         <div className="p-6 flex min-h-screen flex-col items-center overflow-y-hidden">
-            <h1 className='text-2xl text-red-600 font-bold'>
+            <h1 className='text-red-600 text-3xl font-bold tracking-tight'>
                 Memes
             </h1>
             {isLoading ? (
@@ -112,9 +112,13 @@ export default function Dashboard() {
                                 preventSwipe={['up', 'down']}
                                 className={index === 0 ? swingClass : ''} // Apply animation only to the first card
                             >
-                                <Card className="h-full w-full flex flex-col">
+                                <Card className="h-full w-full flex flex-col border-2 rounded-lg border-l-3 border-r-3 border-dashed border-black">
                                     <CardHeader>
-                                        <CardTitle className='m-2'>{meme.Title}</CardTitle>
+                                        <CardTitle className='m-2'>
+                                            <span>
+                                                <h1 className="mt-2 text-2xl font-bold tracking-tight text-gray-900 sm:text-xl">{meme.Title}</h1>
+                                            </span>
+                                        </CardTitle>
                                         <CardDescription>
                                             <Badge className='m-2'>
                                                 {meme.Author}

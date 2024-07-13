@@ -13,7 +13,7 @@ export default function DashboardNav() {
                     <NavigationMenuContent>
                         <ul className="grid gap-3 p-6 md:w-[250px] lg:w-[300px] lg:grid-cols-[.75fr_1fr]">
                             <li className="row-span-3">
-                                <Badge variant="secondary" className="text-sm hover:scale-105 transition-transform duration-200 ease-in-out">
+                                <Badge variant="secondary" className="text-sm hover:bg-gray-200 transition-colors duration-200 ease-in-out">
                                     <Link href="/dashboard/profile">
                                         Profile 😏
                                     </Link>
@@ -29,7 +29,7 @@ export default function DashboardNav() {
                         <NavigationMenuLink>
                             <ul className="grid gap-3 p-6 md:w-[250px] lg:w-[300px]">
                                 <li>
-                                    <Badge variant="secondary" className='hover:scale-105 transition-transform duration-200 ease-in-out'>
+                                    <Badge variant="secondary" className='hover:bg-gray-200 transition-colors duration-200 ease-in-out'>
                                         <Link href="/dashboard" passHref className="text-sm ">
                                             <NavigationMenuLink>
                                                 Memes <span role="img" aria-label="memes">😂</span>
@@ -38,7 +38,7 @@ export default function DashboardNav() {
                                     </Badge>
                                 </li>
                                 <li>
-                                    <Badge variant="secondary" className='hover:scale-105 transition-transform duration-200 ease-in-out'>
+                                    <Badge variant="secondary" className='hover:bg-gray-200 transition-colors duration-200 ease-in-out'>
                                         <Link href="/dashboard/peeps" passHref className="text-sm">
                                             <NavigationMenuLink>
                                                 Peeps <span role="img" aria-label="peeps">👥</span>
@@ -56,7 +56,7 @@ export default function DashboardNav() {
                     <NavigationMenuContent>
                         <ul className="grid gap-3 p-6 md:w-[250px] lg:w-[300px]">
                             <li>
-                                <Badge variant="secondary" className='hover:scale-105 transition-transform duration-200 ease-in-out'>
+                                <Badge variant="secondary" className='hover:bg-gray-200 transition-colors duration-200 ease-in-out'>
                                     <Link href="/dashboard/logout" passHref className="text-sm">
                                         <NavigationMenuLink>
                                             Logout <span role="img" aria-label="logout">👀</span>
