@@ -85,7 +85,9 @@ const Chat: React.FC<ChatProps> = ({ userId }) => {
 
 
     return (
+
         <div className='p-3'>
+            <Button className="mb-4" variant="default" onClick={() => fetchMessages(setMessages, setLoading, userId, user)}>🔃</Button>
             {loading ? (
                 <div className="flex m-3 h-96 w-full items-center justify-center flex-col space-y-4 gap-4">
                     <div className="flex flex-col">
@@ -97,7 +99,6 @@ const Chat: React.FC<ChatProps> = ({ userId }) => {
                 </div>
             ) : (
                 <div>
-                    <Button className="mb-4" variant="default" onClick={() => fetchMessages(setMessages, setLoading, userId, user)}>🔃</Button>
                     <div className="chat-messages m-3 h-96 overflow-y-scroll">
                         {messages.map((message) => (
                             <div key={message.id} className={`message ${message.senderId === user.user?._id ? 'sent' : 'received'}`}>
