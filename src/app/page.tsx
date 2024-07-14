@@ -19,11 +19,11 @@ export default function Home() {
         <main className="flex min-h-screen flex-col items-center gap-5">
           <h1 className="mt-2 p-7 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Memeingle</h1>
 
-          <div className="p-6 m-2 border-2 rounded-lg border-l-3 border-r-3 border-dashed border-black">
+          <div className="p-2 m-2 border-2 rounded-lg border-l-3 border-r-3 border-dashed border-black">
 
             <div className="flex flex-col sm:flex-row">
 
-              <div className="sm:w-[50vw] w-[84vw] p-2">
+              <div className="sm:w-[60vw] w-[84vw] p-2">
                 <AspectRatio ratio={16 / 9} className="bg-muted">
                   <Image
                     src="https://images.ctfassets.net/kftzwdyauwt9/3cSZykppt940Q5vMHjbYd8/f111f0645166996fd77bd543d4cfd238/spring_updates.jpg?w=828&q=90&fm=webp"
@@ -34,7 +34,7 @@ export default function Home() {
                 </AspectRatio>
               </div>
 
-              <div className="sm:w-[30vw] w-[84vw] p-2">
+              <div className="sm:w-[30vw] w-[84vw]">
                 <Accordion type="single" collapsible>
                   <AccordionItem value="item-1">
                     <AccordionTrigger>
@@ -124,7 +124,9 @@ export default function Home() {
 
           <div className="p-2 w-full">
             <h1 className="mt-2 p-7 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Tech Stack</h1>
-            <div className="p-4  h-[30rem]">
+            <br />
+            <br />
+            <div className="h-[30rem]">
               <ResizablePanelGroup direction="horizontal" className="w-full h-full border-2 rounded-lg border-l-3 border-r-3 border-dashed border-black">
                 <ResizablePanel defaultSize={50}>
                   <ResizablePanelGroup direction="vertical">

@@ -7,6 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { HoverCard, HoverCardContent, HoverCardTrigger, } from "@/components/ui/hover-card"
+import Link from "next/link";
 
 interface User {
     _id: string;
@@ -58,40 +59,42 @@ export default function Peeps() {
             ) : (
                 <div className="grid gap-4 p-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3">
                     {userData.map((user) => (
-                        <Card key={user._id} className="p-4 m-4 hover:bg-gray-200 transition-colors duration-200 ease-in-out border-2 rounded-lg border-l-3 border-r-3 border-dashed border-black">
-                            <CardHeader className="card-header">
-                                <CardTitle>
-                                    <Avatar>
-                                        <AvatarImage
-                                            width={20}
-                                            src={user.avatar}
-                                            alt={user.email}
-                                            className="object-cover h-auto"  // Ensure the image maintains aspect ratio
-                                        />
-                                        <AvatarFallback>{getAvatarInitials(user.email)}</AvatarFallback>
-                                    </Avatar>
+                        <Link key={user._id} href={`./peeps/${user._id}`}>
+                            <Card key={user._id} className="p-4 m-4 hover:bg-gray-200 transition-colors duration-200 ease-in-out border-2 rounded-lg border-l-3 border-r-3 border-dashed border-black">
+                                <CardHeader className="card-header">
+                                    <CardTitle>
+                                        <Avatar>
+                                            <AvatarImage
+                                                width={20}
+                                                src={user.avatar}
+                                                alt={user.email}
+                                                className="object-cover h-auto"  // Ensure the image maintains aspect ratio
+                                            />
+                                            <AvatarFallback>{getAvatarInitials(user.email)}</AvatarFallback>
+                                        </Avatar>
 
-                                    <br />
-                                    <h1>
-                                        {user.email}
-                                    </h1>
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="card-body">
-                                <CardDescription>
-                                    <HoverCard>
-                                        <HoverCardTrigger><p><strong className="text-black">Email:</strong> {user.email}</p></HoverCardTrigger>
-                                        <HoverCardContent>
-                                            <p><strong className="text-black">Bio:</strong> {user.bio}</p>
-                                        </HoverCardContent>
-                                    </HoverCard>
-                                    <p><strong className="text-black">Similarity Score:</strong> <span className={`font-bold ${getSimilarityDescription(user.similarityScore).className}`}>{getSimilarityDescription(user.similarityScore).description}</span></p>
-                                    <p><strong className="text-black">Gender:</strong> {user.gender}</p>
-                                    <p><strong className="text-black">Hobbies:</strong> {user.hobbies}</p>
-                                    <p><strong className="text-black">Created At:</strong> {new Date(user.createdAt).toLocaleDateString()}</p>
-                                </CardDescription>
-                            </CardContent>
-                        </Card>
+                                        <br />
+                                        <h1>
+                                            {user.email}
+                                        </h1>
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent className="card-body">
+                                    <CardDescription>
+                                        <HoverCard>
+                                            <HoverCardTrigger><p><strong className="text-black">Email:</strong> {user.email}</p></HoverCardTrigger>
+                                            <HoverCardContent>
+                                                <p><strong className="text-black">Bio:</strong> {user.bio}</p>
+                                            </HoverCardContent>
+                                        </HoverCard>
+                                        <p><strong className="text-black">Similarity Score:</strong> <span className={`font-bold ${getSimilarityDescription(user.similarityScore).className}`}>{getSimilarityDescription(user.similarityScore).description}</span></p>
+                                        <p><strong className="text-black">Gender:</strong> {user.gender}</p>
+                                        <p><strong className="text-black">Hobbies:</strong> {user.hobbies}</p>
+                                        <p><strong className="text-black">Created At:</strong> {new Date(user.createdAt).toLocaleDateString()}</p>
+                                    </CardDescription>
+                                </CardContent>
+                            </Card>
+                        </Link>
                     ))}
                 </div>
             )}

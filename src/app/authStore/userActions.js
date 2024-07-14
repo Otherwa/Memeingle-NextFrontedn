@@ -223,3 +223,66 @@ export const getSimilarityDescription = (score) => {
             return { description: 'Very Unacceptable', className: 'text-gray-400' };
     }
 }
+
+// messaging
+export const FetchMessagingUserData = async (id, setLoading) => {
+    const token = localStorage.getItem('token');
+    try {
+        const response = await axios.post(APP_URL + `user/${id}`, {
+            "id": id
+        }, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        const data = response.data;
+        setLoading(false);
+        return data;
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+    }
+};
+
+export const fetchMessages = async (setMessages, setLoading, userId, user) => {
+    try {
+        setLoading(true);
+        const token = localStorage.getItem('token');
+        const securityKey = `${userId}_${user.user._id}`;
+        const response = await axios.get(APP_URL + `messages?securityKey=${securityKey}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        setMessages(response.data);
+        setLoading(false);
+    } catch (error) {
+        console.error('Error fetching messages:', error);
+    }
+};
+
+
+export const handleSendMessage = async (newMessage, setNewMessage, setMessages, userId, user) => {
+    const token = localStorage.getItem('token');
+    if (!newMessage.trim() || !user) return;
+    console.log(user);
+    const securityKey = `${userId}_${user.user._id}`;
+    const messageData = {
+        text: newMessage,
+        senderId: user.user._id,
+        timestamp: new Date().toISOString(),
+        securityKey: securityKey
+    };
+
+    try {
+        await axios.post(APP_URL + 'messages', messageData, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        setNewMessage('');
+        // Fetch updated messages after sending the message
+        await fetchMessages(setMessages, userId, user);
+    } catch (error) {
+        console.error('Error sending message:', error);
+    }
+};
