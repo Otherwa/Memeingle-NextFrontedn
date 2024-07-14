@@ -126,7 +126,7 @@ export default function Home() {
             <h1 className="mt-2 p-7 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Tech Stack</h1>
             <br />
             <br />
-            <div className="h-[30rem] p-2">
+            <div className="h-[30rem] p-4">
               <ResizablePanelGroup direction="horizontal" className="w-full h-full border-2 rounded-lg border-l-3 border-r-3 border-dashed border-black">
                 <ResizablePanel defaultSize={50}>
                   <ResizablePanelGroup direction="vertical">
