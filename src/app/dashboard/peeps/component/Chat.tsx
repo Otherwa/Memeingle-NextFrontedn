@@ -98,8 +98,8 @@ const Chat: React.FC<ChatProps> = ({ userId }) => {
                 </div>
             ) : (
                 <div>
+                    <Button className="mb-4" variant="default" onClick={() => fetchMessages(setMessages, setLoading, userId, user)}>🔃</Button>
                     <div className="chat-messages m-3 h-96 overflow-y-scroll">
-                        <Button className="mb-4" variant="default" onClick={() => fetchMessages(setMessages, setLoading, userId, user)}>🔃</Button>
                         {messages.map((message) => (
                             <div key={message.id} className={`message ${message.senderId === user.user?._id ? 'sent' : 'received'}`}>
 
