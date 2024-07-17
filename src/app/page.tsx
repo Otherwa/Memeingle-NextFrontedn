@@ -34,7 +34,7 @@ export default function Home() {
                 </AspectRatio>
               </div>
 
-              <div className="sm:w-[30vw] w-[84vw]">
+              <div className="sm:w-[30vw] w-[84vw] m-3">
                 <Accordion type="single" collapsible>
                   <AccordionItem value="item-1">
                     <AccordionTrigger>

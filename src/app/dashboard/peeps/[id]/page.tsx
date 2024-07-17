@@ -58,7 +58,7 @@ export default function UserPeep({ params }: { params: Params }) {
 
     return (
         <div className="flex lg:flex-row flex-col">
-            <div className='p-4 w-full lg:w-1/2'>
+            <div className='p-4 m-3 w-full lg:w-1/2'>
                 <h1 className="text-red-600 text-xl font-bold tracking-tight flex items-center justify-center space-x-4">{userData.email}</h1>
                 <Card className="p-4 m-4 hover:bg-gray-200 transition-colors duration-200 ease-in-out border-2 rounded-lg border-l-3 border-r-3 border-dashed border-black">
                     <CardHeader className="card-header">

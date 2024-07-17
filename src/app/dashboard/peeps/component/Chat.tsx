@@ -27,6 +27,14 @@ const Chat: React.FC<ChatProps> = ({ userId }) => {
     const [loading, setLoading] = useState(true);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
+    // Load messages from local storage
+    useEffect(() => {
+        const cachedMessages = localStorage.getItem(`messages-${userId}`);
+        if (cachedMessages) {
+            setMessages(JSON.parse(cachedMessages));
+        }
+    }, [userId]);
+
     // Fetch user data on component mount
     useEffect(() => {
         const fetchData = async () => {
@@ -42,7 +50,7 @@ const Chat: React.FC<ChatProps> = ({ userId }) => {
     useEffect(() => {
         const fetchInitialMessages = async () => {
             if (userId && user.user?._id) {
-                await fetchMessages(setMessages, setLoading, userId, user);
+                await fetchMessages(setMessagesWithCache, setLoading, userId, user);
                 scrollToBottom();
             }
         };
@@ -54,7 +62,7 @@ const Chat: React.FC<ChatProps> = ({ userId }) => {
     useEffect(() => {
         const interval = setInterval(() => {
             if (userId && user.user?._id) {
-                fetchMessages(setMessages, false, userId, user);
+                fetchMessages(setMessagesWithCache, false, userId, user);
             }
         }, 5 * 60 * 1000); // Fetch messages every 5 minutes
 
@@ -65,10 +73,10 @@ const Chat: React.FC<ChatProps> = ({ userId }) => {
     const sendMessage = async () => {
         if (!newMessage.trim() || !userId || !user.user?._id) return;
 
-        await handleSendMessage(newMessage, setNewMessage, setMessages, userId, user);
+        await handleSendMessage(newMessage, setNewMessage, setMessagesWithCache, userId, user);
 
         // After sending message, fetch updated messages
-        fetchMessages(setMessages, setLoading, userId, user);
+        fetchMessages(setMessagesWithCache, setLoading, userId, user);
     };
 
     // Function to format timestamp
@@ -82,19 +90,22 @@ const Chat: React.FC<ChatProps> = ({ userId }) => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
 
-
+    // Save messages to local storage and state
+    const setMessagesWithCache = (newMessages: Message[]) => {
+        setMessages(newMessages);
+        localStorage.setItem(`messages-${userId}`, JSON.stringify(newMessages));
+    };
 
     return (
-
         <div className='p-3'>
-            <Button className="mb-4" variant="default" onClick={() => fetchMessages(setMessages, setLoading, userId, user)}>🔃</Button>
+            <div className="flex items-stretch">
+                <Button className="m-3 w-full" variant="secondary" onClick={() => fetchMessages(setMessagesWithCache, setLoading, userId, user)}>🔃 Refresh</Button>
+            </div>
+            {/* <Button className='m-2 w-full' onClick={sendMessage}>Send</Button> */}
             {loading ? (
                 <div className="flex m-3 h-96 w-full items-center justify-center flex-col space-y-4 gap-4">
                     <div className="flex flex-col">
                         <Skeleton className="h-[125px] w-[250px] rounded-xl" />
-                        <div className="space-y-2">
-                            <Skeleton className="h-4 w-[250px]" />
-                        </div>
                     </div>
                 </div>
             ) : (
@@ -102,32 +113,34 @@ const Chat: React.FC<ChatProps> = ({ userId }) => {
                     <div className="chat-messages m-3 h-96 overflow-y-scroll">
                         {messages.map((message) => (
                             <div key={message.id} className={`message ${message.senderId === user.user?._id ? 'sent' : 'received'}`}>
-
                                 <div>
-                                    <p className='text-lg' >{message.text}</p>
+                                    <p className='text-lg'>{message.text}</p>
                                     <span className="text-sm">{formatTimestamp(message.timestamp)}</span>
                                     <br />
                                     <span className="text-sm">{message.senderId === user.user?._id ? 'You' : 'Sender'}</span>
                                 </div>
-
                             </div>
                         ))}
                         <div ref={messagesEndRef} /> {/* Empty div to scroll to */}
                     </div>
-                </div>)}
+                </div>
+            )}
 
-
-            <div className='flex flex-col gap-1'>
-                <Textarea
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                    placeholder="Type a message..."
-                    className='m-2'
-                />
-                <Button variant="secondary" className='m-2' onClick={sendMessage}>Send</Button>
-
+            <div>
+                <div className='m-3'>
+                    <div className="m-3">
+                        <Textarea
+                            value={newMessage}
+                            onChange={(e) => setNewMessage(e.target.value)}
+                            placeholder="Type a message..."
+                        />
+                    </div>
+                    <div className="flex items-stretch">
+                        <Button className='m-2 w-full' onClick={sendMessage}>Send</Button>
+                    </div>
+                </div>
             </div>
-        </div >
+        </div>
     );
 };
 
