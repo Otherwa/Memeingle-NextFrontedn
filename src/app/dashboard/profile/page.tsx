@@ -58,7 +58,7 @@ export default function Profile() {
                         &nbsp;
                         <Link href="/dashboard/profile/user">
                             <ToggleGroupItem value="bold" aria-label="Toggle Profile">
-                                Profile
+                                Profile 🪞
                             </ToggleGroupItem>
                         </Link>
                     </ToggleGroup>

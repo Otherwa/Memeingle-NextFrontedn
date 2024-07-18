@@ -58,16 +58,7 @@ const Chat: React.FC<ChatProps> = ({ userId }) => {
         fetchInitialMessages();
     }, [userId, user]);
 
-    // Function to fetch messages periodically
-    useEffect(() => {
-        const interval = setInterval(() => {
-            if (userId && user.user?._id) {
-                fetchMessages(setMessagesWithCache, false, userId, user);
-            }
-        }, 5 * 60 * 1000); // Fetch messages every 5 minutes
 
-        return () => clearInterval(interval); // Clean up interval on component unmount
-    }, [userId, user]);
 
     // Handle sending a new message
     const sendMessage = async () => {
@@ -77,6 +68,7 @@ const Chat: React.FC<ChatProps> = ({ userId }) => {
 
         // After sending message, fetch updated messages
         fetchMessages(setMessagesWithCache, setLoading, userId, user);
+        scrollToBottom();
     };
 
     // Function to format timestamp
@@ -96,8 +88,19 @@ const Chat: React.FC<ChatProps> = ({ userId }) => {
         localStorage.setItem(`messages-${userId}`, JSON.stringify(newMessages));
     };
 
+    // Function to fetch messages periodically
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (userId && user.user?._id) {
+                fetchMessages(setMessagesWithCache, setLoading, userId, user);
+            }
+        }, 5 * 60 * 1000); // Fetch messages every 5 minutes
+
+        return () => clearInterval(interval); // Clean up interval on component unmount
+    }, [setMessagesWithCache, user, userId]);
+
     return (
-        <div className='p-3'>
+        <div className='border-2 rounded-lg border-l-3 border-r-3 border-dashed border-black'>
             <div className="flex items-stretch">
                 <Button className="m-3 w-full" variant="secondary" onClick={() => fetchMessages(setMessagesWithCache, setLoading, userId, user)}>🔃 Refresh</Button>
             </div>
@@ -114,10 +117,10 @@ const Chat: React.FC<ChatProps> = ({ userId }) => {
                         {messages.map((message) => (
                             <div key={message.id} className={`message ${message.senderId === user.user?._id ? 'sent' : 'received'}`}>
                                 <div>
-                                    <p className='text-lg'>{message.text}</p>
-                                    <span className="text-sm">{formatTimestamp(message.timestamp)}</span>
+                                    <p className='text-sm'>{message.text}</p>
+                                    <span className="text-xs">{formatTimestamp(message.timestamp)}</span>
                                     <br />
-                                    <span className="text-sm">{message.senderId === user.user?._id ? 'You' : 'Sender'}</span>
+                                    <span className="text-xs">{message.senderId === user.user?._id ? 'You' : 'Sender'}</span>
                                 </div>
                             </div>
                         ))}
