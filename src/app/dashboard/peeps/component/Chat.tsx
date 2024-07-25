@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { fetchMessages, fetchUserData, handleSendMessage } from '@/app/authStore/userActions';
+import io from 'socket.io-client';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { fetchMessages } from '@/app/authStore/userActions';
 
 interface ChatProps {
     userId: string;
@@ -20,6 +21,10 @@ interface Message {
     timestamp: any;
 }
 
+const socket = io('http://localhost:5000', {
+    transports: ['websocket'],
+});
+
 const Chat: React.FC<ChatProps> = ({ userId }) => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [newMessage, setNewMessage] = useState('');
@@ -35,40 +40,39 @@ const Chat: React.FC<ChatProps> = ({ userId }) => {
         }
     }, [userId]);
 
-    // Fetch user data on component mount
-    useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            await fetchUserData(setUser, setLoading);
-            setLoading(false);
-        };
-
-        fetchData();
-    }, []);
 
     // Fetch messages initially and on userId or user updates
     useEffect(() => {
-        const fetchInitialMessages = async () => {
-            if (userId && user.user?._id) {
-                await fetchMessages(setMessagesWithCache, setLoading, userId, user);
-                scrollToBottom();
-            }
-        };
+        if (userId && user.user?._id) {
 
-        fetchInitialMessages();
+            fetchMessages(setMessages, setLoading, userId, user);
+            scrollToBottom();
+        }
     }, [userId, user]);
 
+    // Handle receiving messages via Socket.IO
+    useEffect(() => {
+        socket.on('receiveMessage', (message: Message) => {
+            setMessages((prevMessages) => [...prevMessages, message]);
+            scrollToBottom();
+        });
 
+        return () => {
+            socket.off('receiveMessage'); // Clean up listener on component unmount
+        };
+    }, []);
 
     // Handle sending a new message
-    const sendMessage = async () => {
+    const sendMessage = () => {
         if (!newMessage.trim() || !userId || !user.user?._id) return;
 
-        await handleSendMessage(newMessage, setNewMessage, setMessagesWithCache, userId, user);
+        const messageData = { id: Date.now().toString(), text: newMessage, senderId: user.user._id, timestamp: new Date() };
+        socket.emit('sendMessage', messageData);
+        setMessages((prevMessages) => [...prevMessages, messageData]);
+        setNewMessage('');
 
-        // After sending message, fetch updated messages
-        fetchMessages(setMessagesWithCache, setLoading, userId, user);
-        scrollToBottom();
+        // Save messages to local storage
+        localStorage.setItem(`messages-${userId}`, JSON.stringify([...messages, messageData]));
     };
 
     // Function to format timestamp
@@ -82,29 +86,15 @@ const Chat: React.FC<ChatProps> = ({ userId }) => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
 
-    // Save messages to local storage and state
-    const setMessagesWithCache = (newMessages: Message[]) => {
-        setMessages(newMessages);
-        localStorage.setItem(`messages-${userId}`, JSON.stringify(newMessages));
-    };
-
-    // Function to fetch messages periodically
-    useEffect(() => {
-        const interval = setInterval(() => {
-            if (userId && user.user?._id) {
-                fetchMessages(setMessagesWithCache, setLoading, userId, user);
-            }
-        }, 5 * 60 * 1000); // Fetch messages every 5 minutes
-
-        return () => clearInterval(interval); // Clean up interval on component unmount
-    }, [setMessagesWithCache, user, userId]);
 
     return (
         <div className='border-2 rounded-lg border-l-3 border-r-3 border-dashed border-black'>
             <div className="flex items-stretch">
-                <Button className="m-3 w-full" variant="secondary" onClick={() => fetchMessages(setMessagesWithCache, setLoading, userId, user)}>🔃 Refresh</Button>
+                <Button className="m-3 w-full" variant="secondary" onClick={() => {
+                    // Fetch messages on button click (implement fetchMessages as needed)
+                    // Example: fetchMessages(setMessagesWithCache, setLoading, userId, user);
+                }}>🔃 Refresh</Button>
             </div>
-            {/* <Button className='m-2 w-full' onClick={sendMessage}>Send</Button> */}
             {loading ? (
                 <div className="flex m-3 h-96 w-full items-center justify-center flex-col space-y-4 gap-4">
                     <div className="flex flex-col">
