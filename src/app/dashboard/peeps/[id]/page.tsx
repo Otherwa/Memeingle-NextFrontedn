@@ -13,13 +13,19 @@ interface Params {
 }
 
 interface UserData {
+    _id: string;
     email: string;
     avatar: string;
-    bio: string;
-    gender: string;
-    hobbies: string;
-    likedmemes: string;
-    quotient: Array<object>;
+    avatarBase64: string;
+    likedmemes: number;
+    details: {
+        liked: string[];
+        hobbies: string;
+        gender: string;
+        bio: string;
+    };
+    similarityScore: string;
+    createdAt: string;
 }
 
 export default function UserPeep({ params }: { params: Params }) {
@@ -70,7 +76,7 @@ export default function UserPeep({ params }: { params: Params }) {
                             <Avatar>
                                 <AvatarImage
                                     width={20}
-                                    src={userData.avatar}
+                                    src={`data:image/png;base64,${userData.avatarBase64}`}
                                     alt={userData.email}
                                     className="object-cover h-[4rem] w-[4rem] rounded-full"
                                 />
@@ -80,15 +86,15 @@ export default function UserPeep({ params }: { params: Params }) {
                     </CardHeader>
                     <CardContent className="card-body">
                         <CardDescription>
-                            <p className='text-sm' ><strong className="text-black">Bio :</strong>&nbsp;<Badge variant="secondary"> {userData.bio}</Badge></p>
+                            <p className='text-sm' ><strong className="text-black">Bio :</strong>&nbsp;<Badge variant="secondary"> {userData.details.bio}</Badge></p>
                             <br />
-                            <p className='text-sm'><strong className="text-black">Gender :</strong>&nbsp;<Badge variant="secondary"> {userData.gender}</Badge></p>
+                            <p className='text-sm'><strong className="text-black">Gender :</strong>&nbsp;<Badge variant="secondary"> {userData.details.gender}</Badge></p>
                             <br />
-                            <p className='text-sm'><strong className="text-black">Hobbies :</strong>&nbsp;<Badge variant="secondary"> {userData.hobbies}</Badge></p>
+                            <p className='text-sm'><strong className="text-black">Hobbies :</strong>&nbsp;<Badge variant="secondary"> {userData.details.hobbies}</Badge></p>
                             <br />
                             <p className='text-sm'><strong className="text-black">Memes Liked :</strong>&nbsp;<Badge variant="secondary">{userData.likedmemes}</Badge></p>
                             <br />
-                            <p className='text-sm'><strong className="text-black">Humor Quotient:</strong>&nbsp;<Badge variant="secondary"> {userData.hobbies}</Badge></p>
+                            <p className='text-sm'><strong className="text-black">Humor Quotient:</strong>&nbsp;<Badge variant="secondary"> {userData.details.hobbies}</Badge></p>
                         </CardDescription>
                     </CardContent>
                 </Card>

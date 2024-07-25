@@ -20,7 +20,8 @@ import { useRouter } from 'next/navigation';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { fetchUserProfileData, toBase64, submitForm } from '@/app/authStore/userActions';
+import { fetchUserProfileData, submitForm } from '@/app/authStore/userActions';
+import axios from 'axios';
 
 const formSchema = z.object({
     email: z.string().email({
@@ -37,7 +38,6 @@ export default function ProfileUser() {
     const [userData, setUserData] = useState({ userStats: [], user: [] });
     const [loading, setLoading] = useState(true);
 
-    // file
     const [file, setFile] = useState<File | null>(null);
     const [base64, setBase64] = useState<string | null>(null);
 
@@ -69,9 +69,9 @@ export default function ProfileUser() {
         reader.readAsDataURL(selectedFile);
     };
 
+
     const onSubmit = async (values: any) => {
-        const token = localStorage.getItem('token');
-        await submitForm(values, token, file, setBase64);
+        await submitForm(values, file);
     };
 
     if (loading) {
@@ -191,8 +191,7 @@ export default function ProfileUser() {
                                 </FormItem>
                             )}
                         />
-
-                        <Button type="submit">Make It 🤩</Button>
+                        <Button type="submit">Submit</Button>
                     </form>
                 </Form>
             </div>

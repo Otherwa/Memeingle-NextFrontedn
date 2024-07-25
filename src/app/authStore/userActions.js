@@ -76,7 +76,6 @@ export const likeMeme = async (memeId) => {
 
 
 // ? Profile
-
 export const fetchUserData = async (setUserData, setIsLoading) => {
     const token = localStorage.getItem('token');
     if (!token) return;
@@ -100,71 +99,52 @@ export const fetchUserProfileData = async (token, setUserData, form, setBase64, 
     try {
         const response = await axios.get(APP_URL + 'user', {
             headers: {
-                'Authorization': `Bearer ${token}`
-            }
+                Authorization: `Bearer ${token}`,
+            },
         });
-        const data = response.data;
-        console.log(data);
-        setUserData(data);
+        const { user, userStats } = response.data;
+        setUserData({ user, userStats });
 
-        // set form data
-        form.setValue('email', data.user.email);
-        form.setValue('hobbies', data.user.hobbies);
-        form.setValue('bio', data.user.bio);
-        form.setValue('gender', data.user.gender);
-        setBase64(data.user.avatar);
+        if (user.avatarBase64) {
+            setBase64(`data:image/png;base64,${user.avatarBase64}`);
+        }
+
+        form.reset({
+            email: user.email,
+            hobbies: user.details.hobbies,
+            bio: user.details.bio,
+            gender: user.details.gender,
+        });
 
         setLoading(false);
     } catch (error) {
         console.error('Error fetching user data:', error);
+        setLoading(false);
     }
 };
 
-export const toBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-        const fileReader = new FileReader();
-
-        fileReader.readAsDataURL(file);
-
-        fileReader.onload = () => {
-            resolve(fileReader.result);
-        };
-
-        fileReader.onerror = (error) => {
-            reject(error);
-        };
-    });
-};
-
-export const submitForm = async (values, token, file, setBase64) => {
+export const submitForm = async (values, file) => {
     try {
-        let base64 = null;
-        let data = null;
+        const token = localStorage.getItem('token');
+        const formData = new FormData();
+        formData.append('hobbies', values.hobbies);
+        formData.append('bio', values.bio);
+        formData.append('gender', values.gender);
 
         if (file) {
-            base64 = await toBase64(file);
-            setBase64(base64);
-            data = {
-                ...values,
-                avatar: base64
-            };
-        } else {
-            data = {
-                ...values,
-            };
+            formData.append('avatar', file);
         }
 
-        const response = await axios.post(
-            APP_URL + 'user',
-            {
-                "data": data
-            },
-            {
+        try {
+            await axios.post(APP_URL + 'user', formData, {
                 headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            }
-        );
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+        } catch (error) {
+            console.error('Form submission failed:', error);
+        }
 
         console.log(response);
     } catch (error) {
@@ -175,7 +155,6 @@ export const submitForm = async (values, token, file, setBase64) => {
 
 
 // ? Peeps
-
 export const fetchUserPeepsData = async (token) => {
     try {
         const response = await axios.get(APP_URL + 'user/peeps', {
@@ -202,25 +181,25 @@ export const getSimilarityDescription = (score) => {
 
     switch (true) {
         case (roundedScore >= 0.9):
-            return { description: 'Excellent', className: 'text-green-600' };
+            return { description: 'Excellent 🌌', className: 'text-lime-600' };
         case (roundedScore >= 0.8):
-            return { description: 'Best Fit', className: 'text-blue-600' };
+            return { description: 'Best Fit 🤩', className: 'text-lime-600' };
         case (roundedScore >= 0.7):
-            return { description: 'Impressive', className: 'text-purple-600' };
+            return { description: 'Impressive 😏', className: 'text-lime-600' };
         case (roundedScore >= 0.6):
-            return { description: 'Good', className: 'text-teal-600' };
+            return { description: 'Good 😄', className: 'text-orange-500' };
         case (roundedScore >= 0.5):
-            return { description: 'Average', className: 'text-yellow-600' };
+            return { description: 'Average 🙂', className: 'text-orange-500' };
         case (roundedScore >= 0.4):
-            return { description: 'Needs Improvement', className: 'text-orange-600' };
+            return { description: 'Needs Improvement 😔', className: 'text-orange-500' };
         case (roundedScore >= 0.3):
-            return { description: 'Poor', className: 'text-red-600' };
+            return { description: 'Poor 😭', className: 'text-red-900' };
         case (roundedScore >= 0.2):
-            return { description: 'Very Poor', className: 'text-red-800' };
+            return { description: 'Very Poor 😭💀', className: 'text-red-900' };
         case (roundedScore >= 0.1):
-            return { description: 'Unacceptable', className: 'text-gray-600' };
+            return { description: 'Unacceptable 😭😭💀', className: 'text-red-900' };
         default:
-            return { description: 'Very Unacceptable', className: 'text-gray-400' };
+            return { description: 'Very Unacceptable 😭😭😭💀', className: 'text-red-900' };
     }
 }
 
@@ -257,32 +236,5 @@ export const fetchMessages = async (setMessages, setLoading, userId, user) => {
         setLoading(false);
     } catch (error) {
         console.error('Error fetching messages:', error);
-    }
-};
-
-
-export const handleSendMessage = async (newMessage, setNewMessage, setMessages, userId, user) => {
-    const token = localStorage.getItem('token');
-    if (!newMessage.trim() || !user) return;
-    console.log(user);
-    const securityKey = `${userId}_${user.user._id}`;
-    const messageData = {
-        text: newMessage,
-        senderId: user.user._id,
-        timestamp: new Date().toISOString(),
-        securityKey: securityKey
-    };
-
-    try {
-        await axios.post(APP_URL + 'messages', messageData, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        setNewMessage('');
-        // Fetch updated messages after sending the message
-        await fetchMessages(setMessages, userId, user);
-    } catch (error) {
-        console.error('Error sending message:', error);
     }
 };

@@ -13,12 +13,18 @@ interface User {
     _id: string;
     email: string;
     avatar: string;
-    similarityScore: number;
-    bio: string;
-    gender: string;
-    hobbies: string;
+    avatarBase64: string;
+    likedmemes: number;
+    details: {
+        liked: string[];
+        hobbies: string;
+        gender: string;
+        bio: string;
+    };
+    similarityScore: string;
     createdAt: string;
 }
+
 
 export default function Peeps() {
     const router = useRouter();
@@ -66,7 +72,7 @@ export default function Peeps() {
                                         <Avatar>
                                             <AvatarImage
                                                 width={20}
-                                                src={user.avatar}
+                                                src={`data:image/png;base64,${user.avatarBase64}`}
                                                 alt={user.email}
                                                 className="object-cover h-auto"  // Ensure the image maintains aspect ratio
                                             />
@@ -84,12 +90,12 @@ export default function Peeps() {
                                         <HoverCard>
                                             <HoverCardTrigger><p><strong className="text-black">Email:</strong> {user.email}</p></HoverCardTrigger>
                                             <HoverCardContent>
-                                                <p><strong className="text-black">Bio:</strong> {user.bio}</p>
+                                                <p><strong className="text-black">Bio:</strong> {user.details.bio}</p>
                                             </HoverCardContent>
                                         </HoverCard>
                                         <p><strong className="text-black">Similarity Score:</strong> <span className={`font-bold ${getSimilarityDescription(user.similarityScore).className}`}>{getSimilarityDescription(user.similarityScore).description}</span></p>
-                                        <p><strong className="text-black">Gender:</strong> {user.gender}</p>
-                                        <p><strong className="text-black">Hobbies:</strong> {user.hobbies}</p>
+                                        <p><strong className="text-black">Gender:</strong> {user.details.gender}</p>
+                                        <p><strong className="text-black">Hobbies:</strong> {user.details.hobbies}</p>
                                         <p><strong className="text-black">Created At:</strong> {new Date(user.createdAt).toLocaleDateString()}</p>
                                     </CardDescription>
                                 </CardContent>
