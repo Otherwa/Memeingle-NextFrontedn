@@ -222,19 +222,24 @@ export const FetchMessagingUserData = async (id, setLoading) => {
     }
 };
 
-export const fetchMessages = async (setMessages, setLoading, userId, user) => {
+
+export const GetInitialMessages = async (sender, recipient) => {
+    const token = localStorage.getItem('token');
+
     try {
-        setLoading(true);
-        const token = localStorage.getItem('token');
-        const securityKey = `${userId}_${user.user._id}`;
-        const response = await axios.get(APP_URL + `messages?securityKey=${securityKey}`, {
+        // Construct the URL with query parameters
+        const url = `${APP_URL}/messages?from=${encodeURIComponent(sender)}&to=${encodeURIComponent(recipient)}`;
+
+        const response = await axios.get(url, {
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`,
             }
         });
-        setMessages(response.data);
-        setLoading(false);
+
+        const data = response.data;
+        return data; // Return the messages data
     } catch (error) {
         console.error('Error fetching messages:', error);
+        throw error; // Rethrow the error if needed
     }
 };

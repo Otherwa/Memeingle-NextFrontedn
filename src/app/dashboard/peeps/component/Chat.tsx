@@ -3,25 +3,33 @@ import io from 'socket.io-client';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { fetchMessages } from '@/app/authStore/userActions';
+import { fetchUserData, GetInitialMessages } from '@/app/authStore/userActions';
+import { Badge } from '@/components/ui/badge';
 
 interface ChatProps {
     userId: string;
 }
 
 interface UserData {
-    user: any;
-    userStats: any;
+    user: {
+        _id: string;
+    } | null;
+    userStats: any; // Update with appropriate type
 }
 
 interface Message {
     id: string;
-    text: string;
-    senderId: string;
-    timestamp: any;
+    message: string;
+    sender: string;
+    recipient: string;
+    timestamp: number; // Use number for timestamp
 }
 
-const socket = io('http://localhost:5000', {
+const APP_URL_SOCKET = process.env.NEXT_PUBLIC_PUBLICAPI_KEY_SOCKET ?? '';
+
+console.log(APP_URL_SOCKET);
+
+const socket = io(APP_URL_SOCKET, {
     transports: ['websocket'],
 });
 
@@ -30,7 +38,50 @@ const Chat: React.FC<ChatProps> = ({ userId }) => {
     const [newMessage, setNewMessage] = useState('');
     const [user, setUser] = useState<UserData>({ user: null, userStats: null });
     const [loading, setLoading] = useState(true);
+    const [onlineStatus, setOnlineStatus] = useState<Record<string, boolean>>({});
     const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    // Fetch user data and register user
+    useEffect(() => {
+        const initialize = async () => {
+            await fetchUserData(setUser, setLoading);
+            if (user.user?._id) {
+                socket.emit('register', user.user._id);
+                console.log(`Registered ${user.user._id} with socket ID ${socket.id}`);
+            }
+
+            // Fetch initial messages
+            if (user.user?._id) {
+                const initialMessages = await GetInitialMessages(user.user._id, userId);
+                setMessages(initialMessages);
+                localStorage.setItem(`messages-${userId}`, JSON.stringify(initialMessages));
+            }
+        };
+
+        initialize();
+
+        // Clean up socket on unmount
+        return () => {
+            socket.off('register');
+            // socket.off('user_status');
+        };
+    }, [user.user?._id, userId]);
+
+    // Listen for user status updates
+    useEffect(() => {
+        socket.on('user_status', (data) => {
+            console.log(data)
+            setOnlineStatus((prevStatus) => ({
+                ...prevStatus,
+                [data.username]: data.status === 'online'
+            }));
+            console.log(onlineStatus)
+        });
+
+        return () => {
+            socket.off('user_status');
+        };
+    }, []);
 
     // Load messages from local storage
     useEffect(() => {
@@ -40,45 +91,53 @@ const Chat: React.FC<ChatProps> = ({ userId }) => {
         }
     }, [userId]);
 
-
-    // Fetch messages initially and on userId or user updates
+    // Fetch and scroll to bottom
     useEffect(() => {
-        if (userId && user.user?._id) {
-
-            fetchMessages(setMessages, setLoading, userId, user);
+        if (messages.length > 0) {
             scrollToBottom();
         }
-    }, [userId, user]);
+    }, [messages]);
 
     // Handle receiving messages via Socket.IO
     useEffect(() => {
-        socket.on('receiveMessage', (message: Message) => {
-            setMessages((prevMessages) => [...prevMessages, message]);
+        const handleMessage = (message: Message) => {
+            console.log(`Received message: ${message.message}`);
+            setMessages((prevMessages) => {
+                const updatedMessages = [...prevMessages, message];
+                localStorage.setItem(`messages-${userId}`, JSON.stringify(updatedMessages));
+                return updatedMessages;
+            });
             scrollToBottom();
-        });
+        };
+
+        socket.on('new_message', handleMessage);
 
         return () => {
-            socket.off('receiveMessage'); // Clean up listener on component unmount
+            socket.off('new_message', handleMessage);
         };
-    }, []);
+    }, [userId]);
 
     // Handle sending a new message
     const sendMessage = () => {
         if (!newMessage.trim() || !userId || !user.user?._id) return;
 
-        const messageData = { id: Date.now().toString(), text: newMessage, senderId: user.user._id, timestamp: new Date() };
-        socket.emit('sendMessage', messageData);
-        setMessages((prevMessages) => [...prevMessages, messageData]);
-        setNewMessage('');
+        const messageData: Message = {
+            id: Date.now().toString(),
+            message: newMessage,
+            sender: user.user._id,
+            recipient: userId,
+            timestamp: Date.now()
+        };
 
-        // Save messages to local storage
-        localStorage.setItem(`messages-${userId}`, JSON.stringify([...messages, messageData]));
+        console.log(`Sending message: ${newMessage}`);
+        socket.emit('private_message', messageData);
+        setNewMessage('');
     };
 
     // Function to format timestamp
-    const formatTimestamp = (timestamp: any): string => {
+    const formatTimestamp = (timestamp: number): string => {
         const date = new Date(timestamp);
-        return date.toLocaleString(); // Adjust format as needed
+        return date.toLocaleString();
     };
 
     // Scroll to the bottom of the messages container
@@ -86,15 +145,11 @@ const Chat: React.FC<ChatProps> = ({ userId }) => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
 
+    // Determine status color
+    const statusColor = (status: boolean) => (status ? 'text-green-500' : 'text-red-500');
 
     return (
         <div className='border-2 rounded-lg border-l-3 border-r-3 border-dashed border-black'>
-            <div className="flex items-stretch">
-                <Button className="m-3 w-full" variant="secondary" onClick={() => {
-                    // Fetch messages on button click (implement fetchMessages as needed)
-                    // Example: fetchMessages(setMessagesWithCache, setLoading, userId, user);
-                }}>🔃 Refresh</Button>
-            </div>
             {loading ? (
                 <div className="flex m-3 h-96 w-full items-center justify-center flex-col space-y-4 gap-4">
                     <div className="flex flex-col">
@@ -103,18 +158,27 @@ const Chat: React.FC<ChatProps> = ({ userId }) => {
                 </div>
             ) : (
                 <div>
-                    <div className="chat-messages m-3 h-96 overflow-y-scroll">
-                        {messages.map((message) => (
-                            <div key={message.id} className={`message ${message.senderId === user.user?._id ? 'sent' : 'received'}`}>
-                                <div>
-                                    <p className='text-sm'>{message.text}</p>
-                                    <span className="text-xs">{formatTimestamp(message.timestamp)}</span>
-                                    <br />
-                                    <span className="text-xs">{message.senderId === user.user?._id ? 'You' : 'Sender'}</span>
+                    <div className='m-4'>
+                        <div>Recipient Status: &nbsp;
+                            <Badge variant='secondary' className={statusColor(onlineStatus[userId])}>
+                                {userId ? (onlineStatus[userId] ? "Online" : "Offline") : "Unknown"}
+                            </Badge>
+                        </div>
+                    </div>
+                    <div>
+                        <div className="chat-messages m-3 h-96 overflow-y-scroll">
+                            {messages.map((message) => (
+                                <div key={message.id} className={`message ${message.sender === user.user?._id ? 'sent' : 'received'}`}>
+                                    <div>
+                                        <p className='text-sm'>{message.message}</p>
+                                        <span className="text-xs">{formatTimestamp(message.timestamp)}</span>
+                                        <br />
+                                        <span className="text-xs">{message.sender === user.user?._id ? 'You' : 'Sender'}</span>
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
-                        <div ref={messagesEndRef} /> {/* Empty div to scroll to */}
+                            ))}
+                            <div ref={messagesEndRef} />
+                        </div>
                     </div>
                 </div>
             )}

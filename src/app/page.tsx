@@ -21,7 +21,7 @@ export default function Home() {
 
           <div className="p-2 m-2 border-2 rounded-lg border-l-3 border-r-3 border-dashed border-black">
 
-            <div className="flex flex-col sm:flex-row">
+            <div className="flex flex-col sm:flex-row items-center">
 
               <div className="sm:w-[60vw] w-[84vw] p-2">
                 <AspectRatio ratio={16 / 9} className="bg-muted">
