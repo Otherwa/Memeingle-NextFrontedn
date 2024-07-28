@@ -102,11 +102,19 @@ const Chat: React.FC<ChatProps> = ({ userId }) => {
     useEffect(() => {
         const handleMessage = (message: Message) => {
             console.log(`Received message: ${message.message}`);
-            setMessages((prevMessages) => {
-                const updatedMessages = [...prevMessages, message];
-                localStorage.setItem(`messages-${userId}`, JSON.stringify(updatedMessages));
-                return updatedMessages;
-            });
+            if (
+                (message.sender === userId && message.recipient === user.user?._id) ||
+                (message.sender === user.user?._id && message.recipient === userId)
+            ) {
+
+                setMessages((prevMessages) => {
+                    const updatedMessages = [...prevMessages, message];
+                    localStorage.setItem(`messages-${userId}`, JSON.stringify(updatedMessages));
+                    return updatedMessages;
+                });
+
+            }
+
             scrollToBottom();
         };
 
