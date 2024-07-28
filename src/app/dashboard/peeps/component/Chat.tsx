@@ -142,6 +142,19 @@ const Chat: React.FC<ChatProps> = ({ userId }) => {
         setNewMessage('');
     };
 
+    // Handle window unload
+    useEffect(() => {
+        const handleWindowUnload = () => {
+            socket.emit('disconnect');
+        };
+
+        window.addEventListener('beforeunload', handleWindowUnload);
+
+        return () => {
+            window.removeEventListener('beforeunload', handleWindowUnload);
+        };
+    }, []);
+
     // Function to format timestamp
     const formatTimestamp = (timestamp: number): string => {
         const date = new Date(timestamp);
