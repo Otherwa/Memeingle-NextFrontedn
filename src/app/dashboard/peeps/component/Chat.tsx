@@ -62,8 +62,13 @@ const Chat: React.FC<ChatProps> = ({ userId }) => {
 
         // Clean up socket on unmount
         return () => {
+            if (user.user?._id) {
+                socket.emit('deregister', user.user._id); // Notify server of disconnection
+            }
             socket.off('register');
             socket.off('user_status');
+            socket.off('new_message');
+            // socket.disconnect(); // Disconnect socket when the component unmounts
         };
     }, [user.user?._id, userId]);
 
@@ -75,13 +80,10 @@ const Chat: React.FC<ChatProps> = ({ userId }) => {
                 ...prevStatus,
                 [data.username]: data.status === 'online'
             }));
-            console.log(onlineStatus)
         });
 
-        return () => {
-            socket.off('user_status');
-        };
-    }, []);
+
+    }, [messages, onlineStatus, setOnlineStatus]);
 
     // Load messages from local storage
     useEffect(() => {
@@ -101,10 +103,13 @@ const Chat: React.FC<ChatProps> = ({ userId }) => {
     // Handle receiving messages via Socket.IO
     useEffect(() => {
         const handleMessage = (message: Message) => {
+            console.log(message)
             console.log(`Received message: ${message.message}`);
+            console.log(user.user?._id)
+            console.log(message.sender)
             if (
                 (message.sender === userId && message.recipient === user.user?._id) ||
-                (message.sender === user.user?._id && message.recipient === userId)
+                (message.sender == user.user?._id && message.recipient == userId)
             ) {
 
                 setMessages((prevMessages) => {
@@ -112,9 +117,7 @@ const Chat: React.FC<ChatProps> = ({ userId }) => {
                     localStorage.setItem(`messages-${userId}`, JSON.stringify(updatedMessages));
                     return updatedMessages;
                 });
-
             }
-
             scrollToBottom();
         };
 
@@ -123,7 +126,7 @@ const Chat: React.FC<ChatProps> = ({ userId }) => {
         return () => {
             socket.off('new_message', handleMessage);
         };
-    }, [userId]);
+    }, [userId, user.user?._id]);
 
     // Handle sending a new message
     const sendMessage = () => {
@@ -141,19 +144,6 @@ const Chat: React.FC<ChatProps> = ({ userId }) => {
         socket.emit('private_message', messageData);
         setNewMessage('');
     };
-
-    // Handle window unload
-    useEffect(() => {
-        const handleWindowUnload = () => {
-            socket.emit('disconnect');
-        };
-
-        window.addEventListener('beforeunload', handleWindowUnload);
-
-        return () => {
-            window.removeEventListener('beforeunload', handleWindowUnload);
-        };
-    }, []);
 
     // Function to format timestamp
     const formatTimestamp = (timestamp: number): string => {
