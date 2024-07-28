@@ -63,7 +63,7 @@ const Chat: React.FC<ChatProps> = ({ userId }) => {
         // Clean up socket on unmount
         return () => {
             socket.off('register');
-            // socket.off('user_status');
+            socket.off('user_status');
         };
     }, [user.user?._id, userId]);
 
@@ -166,7 +166,7 @@ const Chat: React.FC<ChatProps> = ({ userId }) => {
                         </div>
                     </div>
                     <div>
-                        <div className="chat-messages m-3 h-96 overflow-y-scroll">
+                        <div className="chat-messages m-3 h-96 overflow-y-scroll" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
                             {messages.map((message) => (
                                 <div key={message.id} className={`message ${message.sender === user.user?._id ? 'sent' : 'received'}`}>
                                     <div>
