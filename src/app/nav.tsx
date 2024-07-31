@@ -14,7 +14,7 @@ export default function Navbar() {
                         <ul className="grid gap-3 p-6 md:w-[250px] lg:w-[300px]">
                             <li>
                                 <Badge variant="secondary" className="hover:bg-gray-200 transition-colors duration-200 ease-in-out">
-                                    <Link href="/" passHref className="text-sm h-12 flex flex-col justify-center md:w-[250px] lg:w-[300px]">
+                                    <Link href="/" passHref className="text-sm h-12 flex flex-col justify-center md:w-[270px] lg:w-[300px]">
                                         <NavigationMenuLink>
                                             Home <span role="img" aria-label="home">🏠</span>
                                         </NavigationMenuLink>
@@ -31,7 +31,7 @@ export default function Navbar() {
                         <ul className="grid gap-3 p-6 md:w-[350px] lg:w-[300px]">
                             <li>
                                 <Badge variant="secondary" className="hover:bg-gray-200 transition-colors duration-200 ease-in-out">
-                                    <Link href="/about" passHref className="text-sm h-12 flex flex-col justify-center md:w-[250px] lg:w-[300px]">
+                                    <Link href="/about" passHref className="text-sm h-12 flex flex-col justify-center md:w-[270px] lg:w-[300px]">
                                         <NavigationMenuLink>
                                             Us <span role="img" aria-label="us">👥</span>
                                         </NavigationMenuLink>
@@ -40,7 +40,7 @@ export default function Navbar() {
                             </li>
                             <li>
                                 <Badge variant="secondary" className="hover:bg-gray-200 transition-colors duration-200 ease-in-out">
-                                    <NavigationMenuLink className="text-sm h-12 flex flex-col justify-center md:w-[250px] lg:w-[300px]">
+                                    <NavigationMenuLink className="text-sm h-12 flex flex-col justify-center md:w-[270px] lg:w-[300px]">
                                         The Idea <span role="img" aria-label="idea">💡</span>
                                     </NavigationMenuLink>
                                 </Badge>
@@ -55,7 +55,7 @@ export default function Navbar() {
                         <ul className="grid gap-3 p-6 md:w-[250px] lg:w-[300px]">
                             <li>
                                 <Badge variant="secondary" className="hover:bg-gray-200 transition-colors duration-200 ease-in-out">
-                                    <Link href="/signup" className="text-sm h-12 flex flex-col justify-center md:w-[250px] lg:w-[300px]">
+                                    <Link href="/signup" className="text-sm h-12 flex flex-col justify-center md:w-[270px] lg:w-[300px]">
                                         <NavigationMenuLink>
                                             Register <span role="img" aria-label="register">👀</span>
                                         </NavigationMenuLink>
@@ -64,7 +64,7 @@ export default function Navbar() {
                             </li>
                             <li>
                                 <Badge variant="secondary" className="hover:bg-gray-200 transition-colors duration-200 ease-in-out">
-                                    <Link href="/login" className="text-sm h-12 flex flex-col justify-center md:w-[250px] lg:w-[300px]">
+                                    <Link href="/login" className="text-sm h-12 flex flex-col justify-center md:w-[270px] lg:w-[300px]">
                                         <NavigationMenuLink>
                                             Login <span role="img" aria-label="login">😎</span>
                                         </NavigationMenuLink>
