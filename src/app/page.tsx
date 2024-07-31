@@ -122,7 +122,7 @@ export default function Home() {
 
           </div>
 
-          <div className="p-2 w-full">
+          {/* <div className="p-2 w-full">
             <h1 className="mt-2 p-7 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Tech Stack</h1>
             <br />
             <br />
@@ -179,7 +179,7 @@ export default function Home() {
                 </ResizablePanel>
               </ResizablePanelGroup>
             </div>
-          </div>
+          </div> */}
 
           <div className="p-2">
             <code className="p-1 text-dark"><em>Code &amp; Design by Atharv Desai</em></code>

@@ -155,7 +155,8 @@ export const submitForm = async (values, file) => {
 
 
 // ? Peeps
-export const fetchUserPeepsData = async (token) => {
+export const fetchUserPeepsData = async () => {
+    const token = localStorage.getItem('token');
     try {
         const response = await axios.get(APP_URL + 'user/peeps', {
             headers: {

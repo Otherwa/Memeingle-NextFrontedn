@@ -10,14 +10,14 @@ import { fetchUserData } from "@/app/authStore/userActions";
 import { Input } from "@/components/ui/input";
 
 interface userData {
-    userStats: any;
+    UserStats: any;
     user: any;
 }
 
 export default function Profile() {
     useCheckAuth();
 
-    const [userData, setUserData] = useState<userData>({ userStats: [], user: [] });
+    const [userData, setUserData] = useState<userData>({ UserStats: [], user: [] });
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
 
@@ -29,7 +29,7 @@ export default function Profile() {
         setSearchQuery(event.target.value);
     };
 
-    const filteredMemes = userData.userStats.filter((meme: any) =>
+    const filteredMemes = userData.UserStats.filter((meme: any) =>
         meme.Title.toLowerCase().includes(searchQuery.toLowerCase())
     );
 

@@ -30,7 +30,7 @@ const MemeStats: React.FC<MemeStatsProps> = ({ memes }) => {
     };
 
     return (
-        <div className="grid grid-flow-row-dense grid-cols-1 md:grid-cols-3 gap-4 p-4">
+        <div className="grid grid-flow-row-dense grid-cols-1 md:grid-cols-3 gap-4 p-4 items-center justify-items-center">
             {memes.map((meme, index) => (
                 <div className="w-full lg:w-[20vw] m-3" key={index}>
                     <Card className="h-full w-full flex flex-col">
@@ -56,6 +56,7 @@ const MemeStats: React.FC<MemeStatsProps> = ({ memes }) => {
                                 </span>
                             </Badge>
                             <Badge variant="secondary">Up Votes: {meme.UpVotes}</Badge>
+                            <Badge variant="secondary">Liked At: {meme.likedAt}</Badge>
                         </CardFooter>
                     </Card>
                 </div>

@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from 'react';
-import { fetchUserPeepsData, getAvatarInitials, getSimilarityDescription } from '@/app/authStore/userActions';
+import { fetchUserPeepsData, getAvatarInitials, getSimilarityDescription, useCheckAuth } from '@/app/authStore/userActions';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -31,22 +31,20 @@ export default function Peeps() {
     const [userData, setUserData] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
 
+    useCheckAuth();
+
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            router.push('/login');
-        } else {
-            fetchUserPeepsData(token)
-                .then(data => {
-                    setUserData(data);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                })
-                .finally(() => {
-                    setLoading(false);
-                });
-        }
+        fetchUserPeepsData()
+            .then(data => {
+                setUserData(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+
     }, [router]);
 
     return (
@@ -65,8 +63,8 @@ export default function Peeps() {
             ) : (
                 <div className="grid gap-4 p-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3">
                     {userData.map((user) => (
-                        <Link key={user._id} href={`./peeps/${user._id}`}>
-                            <Card key={user._id} className="p-4 m-4 hover:bg-gray-200 transition-colors duration-200 ease-in-out border-2 rounded-lg border-l-3 border-r-3 border-dashed border-black">
+                        <Link key={user._id} href={`./peeps/${user._id}`} className="w-full">
+                            <Card key={user._id} className="p-4 m-4  hover:bg-gray-200 transition-colors duration-200 ease-in-out border-2 rounded-lg border-l-3 border-r-3 border-solid border-black">
                                 <CardHeader className="card-header">
                                     <CardTitle>
                                         <Avatar>

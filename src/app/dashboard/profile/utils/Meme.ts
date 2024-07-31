@@ -4,4 +4,5 @@ export interface Meme {
   Author: string;
   Url: string;
   UpVotes: string;
+  likedAt: string;
 }

@@ -160,7 +160,7 @@ const Chat: React.FC<ChatProps> = ({ userId }) => {
     const statusColor = (status: boolean) => (status ? 'text-green-500' : 'text-red-500');
 
     return (
-        <div className='border-2 rounded-lg border-l-3 border-r-3 border-dashed border-black'>
+        <div className='border-2 rounded-lg border-l-3 border-r-3 border-solid border-black'>
             {loading ? (
                 <div className="flex m-3 h-96 w-full items-center justify-center flex-col space-y-4 gap-4">
                     <div className="flex flex-col">
