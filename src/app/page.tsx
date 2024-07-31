@@ -23,10 +23,10 @@ export default function Home() {
 
             <div className="flex flex-col sm:flex-row items-center">
 
-              <div className="sm:w-[60vw] w-[84vw] p-2">
+              <div className="sm:w-[60vw] w-[84vw] p-4">
                 <AspectRatio ratio={16 / 9} className="bg-muted">
                   <Image
-                    src="https://images.ctfassets.net/kftzwdyauwt9/3cSZykppt940Q5vMHjbYd8/f111f0645166996fd77bd543d4cfd238/spring_updates.jpg?w=828&q=90&fm=webp"
+                    src="https://cdn.myportfolio.com/e1ad70d8-3a17-4e90-9c11-81c3e6e24cbf/641430ca-942d-4446-9859-6fb893cab2a4_rw_1200.gif?h=40fa44581f5a6a4ae191d5305a2131f9"
                     alt="Photo by Drew Beamer"
                     fill
                     className="rounded-md object-cover"
@@ -95,8 +95,7 @@ export default function Home() {
                     <AccordionContent>
                       Meet the awesome people who made Memeingle possible:
                       <ul className="list-disc ml-6 mt-2">
-                        <li>Atharv Desai - FrontEnd Developer</li>
-                        <li>Jane Smith - UX/UI Designer</li>
+                        <li>Atharv Desai</li>
                       </ul>
                     </AccordionContent>
                   </AccordionItem>
@@ -109,8 +108,8 @@ export default function Home() {
                     <AccordionContent>
                       Explore our codebase on GitHub:
                       <div className="mt-2">
-                        <a href="https://github.com/your-username/memeingle" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                          github.com/your-username/memeingle
+                        <a href="https://github.com/Otherwa" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                          github.com/Otherwa
                         </a>
                       </div>
                     </AccordionContent>
