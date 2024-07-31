@@ -121,7 +121,7 @@ export default function Dashboard() {
                                     <CardHeader>
                                         <CardTitle className='m-2'>
                                             <span>
-                                                <h1 className="mt-2 w-4/5 text-2xl font-bold tracking-tight text-gray-900 sm:text-xl">{meme.Title}</h1>
+                                                <h1 className="mt-2 w-56 text-2xl font-bold tracking-tight text-gray-900 sm:text-xl">{meme.Title}</h1>
                                             </span>
                                         </CardTitle>
                                         <CardDescription>
