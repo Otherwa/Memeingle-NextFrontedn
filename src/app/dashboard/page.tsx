@@ -38,6 +38,11 @@ export default function Dashboard() {
 
     const onCardLeftScreen = (index: number, direction: string, memeId: string) => {
         console.log(`Card left screen at index ${index} ${direction} ${memeId}`);
+
+        if (direction === 'right') {
+            likeMeme(memeId)
+        }
+
         setMemes(prevMemes => {
             const newMemes = prevMemes.filter((_, i) => i !== index);
             if (newMemes.length < 3 && !isFetchingMore) { // ? Fetch more memes if less than 3 are left
