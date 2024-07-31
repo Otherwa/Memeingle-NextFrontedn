@@ -17,9 +17,9 @@ export default function Home() {
       <div className="flex min-h-screen flex-col items-center justify-between p-6">
         {/* Main Content */}
         <main className="flex min-h-screen flex-col items-center gap-5">
-          <h1 className="mt-2 p-7 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Memeingle</h1>
+          <h1 className="mt-2 p-7 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Meme-ingle</h1>
 
-          <div className="p-2 m-2 border-2 rounded-lg border-l-3 border-r-3 border-dashed border-black">
+          <div className="m-3 border-2 rounded-lg border-l-3 border-r-3 border-dashed border-black">
 
             <div className="flex flex-col sm:flex-row items-center">
 
@@ -180,9 +180,6 @@ export default function Home() {
             </div>
           </div> */}
 
-          <div className="p-2">
-            <code className="p-1 text-dark"><em>Code &amp; Design by Atharv Desai</em></code>
-          </div>
         </main>
       </div>
     </div>
