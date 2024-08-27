@@ -7,6 +7,11 @@ import { Avatar, AvatarImage, AvatarFallback } from '@radix-ui/react-avatar';
 import { useState, useEffect } from 'react';
 import Chat from '../component/Chat';
 import { Badge } from '@/components/ui/badge';
+import { Pie } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, ChartData, ChartOptions } from 'chart.js';
+import DataLabelsPlugin from 'chartjs-plugin-datalabels';
+
+ChartJS.register(ArcElement, Tooltip, Legend, DataLabelsPlugin);
 
 interface Params {
     id: string;
@@ -28,10 +33,16 @@ interface UserData {
     createdAt: string;
 }
 
+interface ClusterDistribution {
+    [key: string]: number;
+}
+
 export default function UserPeep({ params }: { params: Params }) {
     useCheckAuth();
     const [loading, setLoading] = useState(true);
+    const [personality, setPersonality] = useState(null);
     const [userData, setUserData] = useState<UserData | null>(null);
+    const [clusterDistribution, setClusterDistribution] = useState<ClusterDistribution | null>(null);
     const { id } = params;
 
     useEffect(() => {
@@ -40,6 +51,8 @@ export default function UserPeep({ params }: { params: Params }) {
             try {
                 const data = await FetchMessagingUserData(id, setLoading);
                 setUserData(data.user);
+                setClusterDistribution(data.user.cluster_distribution);
+                setPersonality(data.user.predicted_personality);
             } catch (error) {
                 console.error('Error fetching user data:', error);
             } finally {
@@ -49,7 +62,6 @@ export default function UserPeep({ params }: { params: Params }) {
 
         fetchData();
     }, [id]);
-
 
     if (loading || !userData) {
         return (
@@ -65,10 +77,64 @@ export default function UserPeep({ params }: { params: Params }) {
         );
     }
 
+    // Prepare data for the pie chart
+    const pieData: ChartData<'pie'> = {
+        labels: clusterDistribution ? Object.keys(clusterDistribution) : [],
+        datasets: [
+            {
+                label: 'Personality Types',
+                data: clusterDistribution ? Object.values(clusterDistribution) : [],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                ],
+                borderWidth: 1,
+            },
+        ],
+    };
+
+    // Chart options with data labels
+    const chartOptions: ChartOptions<'pie'> = {
+        responsive: true,
+        plugins: {
+            datalabels: {
+                color: '#000',
+                formatter: (value: number) => `${value}%`,
+                font: {
+                    weight: 'bold',
+                },
+            },
+            tooltip: {
+                callbacks: {
+                    label: function (context) {
+                        let label = context.label || '';
+                        if (label) {
+                            label += ': ';
+                        }
+                        if (context.raw !== null) {
+                            label += context.raw;
+                        }
+                        return label;
+                    },
+                },
+            },
+        },
+    };
+
     return (
         <div className="flex lg:flex-row flex-col justify-between">
-            <div className='m-4 h-full lg:w-1/2'>
-                <Card className="p-4 hover:bg-gray-200 transition-colors duration-200 ease-in-out ">
+            <div className='m-4 lg:w-1/2'>
+                <Card className="p-4 hover:bg-gray-200 transition-colors duration-200 ease-in-out">
                     <CardHeader className="card-header">
                         <CardTitle>
                             <p className="text-red-600 text-xl font-bold tracking-tight space-x-4">{userData.email}</p>
@@ -99,8 +165,21 @@ export default function UserPeep({ params }: { params: Params }) {
                     </CardContent>
                 </Card>
             </div>
-            <div className='m-4 lg:w-1/2 '>
+
+            <div className='m-4 lg:w-1/2'>
                 <Chat userId={id} />
+            </div>
+
+            <div className='m-4 lg:w-1/2'>
+                {clusterDistribution && (
+                    <div className="p-4">
+                        <h2 className="text-lg font-bold">Distribution</h2>
+                        <h1>Predicted Personality : <b>{personality}</b></h1>
+                        <div> {/* Adjust the width and height as needed */}
+                            <Pie data={pieData} options={chartOptions} />
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
