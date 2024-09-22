@@ -1,6 +1,6 @@
 "use client";
 
-import Image from 'next/image';
+import Image from "next/legacy/image";
 import { useEffect, useMemo, useState } from 'react';
 import TinderCard from 'react-tinder-card';
 import { Button } from '@/components/ui/button';
@@ -104,7 +104,7 @@ export default function Dashboard() {
                     {memes.map((meme, index) => (
                         <div
                             key={index}
-                            className="flex flex-col items-center p-3 h-3/5 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 aspect-[3/4] m-2"
+                            className="flex flex-col items-center p-3 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 aspect-[3/4] m-2"
                         >
                             <TinderCard
                                 key={meme._id}
