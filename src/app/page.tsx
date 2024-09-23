@@ -28,7 +28,6 @@ export default function Home() {
                   <Image
                     src="https://cdn.myportfolio.com/e1ad70d8-3a17-4e90-9c11-81c3e6e24cbf/641430ca-942d-4446-9859-6fb893cab2a4_rw_1200.gif?h=40fa44581f5a6a4ae191d5305a2131f9"
                     alt="Photo by Drew Beamer"
-                    fill
                     className="rounded-md object-cover"
                   />
                 </AspectRatio>
