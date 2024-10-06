@@ -7,11 +7,10 @@ import { Avatar, AvatarImage, AvatarFallback } from '@radix-ui/react-avatar';
 import { useState, useEffect } from 'react';
 import Chat from '../component/Chat';
 import { Badge } from '@/components/ui/badge';
-import { Pie } from 'react-chartjs-2';
+import { Doughnut } from 'react-chartjs-2'; // Import Doughnut chart from react-chartjs-2
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, ChartData, ChartOptions } from 'chart.js';
-import DataLabelsPlugin from 'chartjs-plugin-datalabels';
 
-ChartJS.register(ArcElement, Tooltip, Legend, DataLabelsPlugin);
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 interface Params {
     id: string;
@@ -51,8 +50,8 @@ export default function UserPeep({ params }: { params: Params }) {
             try {
                 const data = await FetchMessagingUserData(id, setLoading);
                 setUserData(data.user);
-                setClusterDistribution(data.user.cluster_distribution);
-                setPersonality(data.user.predicted_personality);
+                setClusterDistribution(data.user.data);
+                setPersonality(data.user.data.predicted_personality);
             } catch (error) {
                 console.error('Error fetching user data:', error);
             } finally {
@@ -77,8 +76,8 @@ export default function UserPeep({ params }: { params: Params }) {
         );
     }
 
-    // Prepare data for the pie chart
-    const pieData: ChartData<'pie'> = {
+    // Prepare data for the Doughnut chart
+    const doughnutData: ChartData<'doughnut'> = {
         labels: clusterDistribution ? Object.keys(clusterDistribution) : [],
         datasets: [
             {
@@ -103,17 +102,10 @@ export default function UserPeep({ params }: { params: Params }) {
         ],
     };
 
-    // Chart options with data labels
-    const chartOptions: ChartOptions<'pie'> = {
+    // Chart options for the Doughnut chart
+    const chartOptions: ChartOptions<'doughnut'> = {
         responsive: true,
         plugins: {
-            datalabels: {
-                color: '#000',
-                formatter: (value: number) => `${value}%`,
-                font: {
-                    weight: 'bold',
-                },
-            },
             tooltip: {
                 callbacks: {
                     label: function (context) {
@@ -175,8 +167,8 @@ export default function UserPeep({ params }: { params: Params }) {
                     <div className="p-4">
                         <h2 className="text-lg font-bold">Distribution</h2>
                         <h1>Predicted Personality : <b>{personality}</b></h1>
-                        <div> {/* Adjust the width and height as needed */}
-                            <Pie data={pieData} options={chartOptions} />
+                        <div>
+                            <Doughnut className='h-1/2 m-2' data={doughnutData} options={chartOptions} />
                         </div>
                     </div>
                 )}
