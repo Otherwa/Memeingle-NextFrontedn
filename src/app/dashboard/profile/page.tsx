@@ -8,6 +8,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useCheckAuth } from "@/app/authStore/userActions";
 import { fetchUserData } from "@/app/authStore/userActions";
 import { Input } from "@/components/ui/input";
+import ProfileUser from './component/Profile';
 
 interface userData {
     UserStats: any;
@@ -48,35 +49,37 @@ export default function Profile() {
     }
 
     return (
-        <div>
-            <div className="flex min-h-screen flex-col items-center p-6 mb-12">
-                <div className="mb-10">
+        <div className="flex flex-col min-h-screen p-6 md:flex-row">
+            {/* Left Panel: Profile Info */}
+            <div className="w-full h-full md:w-1/3  bg-gray-50  shadow-md mb-4 md:mr-4   hover:bg-gray-200 transition-colors duration-200 ease-in-out border-2 rounded-lg border-l-3 border-r-3 border-dashed border-black">
+                {/* Add any other profile-related components here */}
+                <div className="mb-10 p-4">
                     <ToggleGroup variant="outline" type="single">
                         <ToggleGroupItem value="email" aria-label="Toggle Email">
                             {userData.user.email}
                         </ToggleGroupItem>
-                        &nbsp;
-                        <Link href="/dashboard/profile/user">
-                            <ToggleGroupItem value="bold" aria-label="Toggle Profile">
-                                Profile 🪞
-                            </ToggleGroupItem>
-                        </Link>
                     </ToggleGroup>
                 </div>
-                <br />
-                <div className="w-1/2">
-                    <Input
-                        type="text"
-                        placeholder="Search memes..."
-                        value={searchQuery}
-                        onChange={handleSearchChange}
-                        className="mb-6"
-                    />
+                <div className="">
+                    {/* Add more user details as needed */}
+                    <ProfileUser />
                 </div>
-                <div>
+            </div>
+
+            {/* Right Panel: Meme Search and Stats */}
+            <div className='w-full h-full md:w-2/3'>
+                <Input
+                    type="text"
+                    placeholder="Search memes..."
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                    className="mb-6"
+                />
+                <div className="p-6 bg-gray-50 shadow-md  rounded-lg  overflow-y-auto">
                     <MemeStats memes={filteredMemes} />
                 </div>
             </div>
+
         </div>
     );
 }

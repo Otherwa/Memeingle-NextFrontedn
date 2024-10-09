@@ -64,7 +64,7 @@ export default function Peeps() {
                 <div className="grid gap-4 p-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3">
                     {userData.map((user) => (
                         <Link key={user._id} href={`./peeps/${user._id}`} className="w-full">
-                            <Card key={user._id} className="p-4 m-4  hover:bg-gray-200 transition-colors duration-200 ease-in-out border-2 rounded-lg border-l-3 border-r-3 border-solid border-black">
+                            <Card key={user._id} className="p-4 m-4  hover:bg-gray-200 transition-colors duration-200 ease-in-out border-2 rounded-lg border-l-3 border-r-3 border-dashed border-black">
                                 <CardHeader className="card-header">
                                     <CardTitle>
                                         <Avatar>

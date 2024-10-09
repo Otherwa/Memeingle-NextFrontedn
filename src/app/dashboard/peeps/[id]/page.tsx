@@ -7,7 +7,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@radix-ui/react-avatar';
 import { useState, useEffect } from 'react';
 import Chat from '../component/Chat';
 import { Badge } from '@/components/ui/badge';
-import { Doughnut } from 'react-chartjs-2'; // Import Doughnut chart from react-chartjs-2
+import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, ChartData, ChartOptions } from 'chart.js';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -39,6 +39,7 @@ interface ClusterDistribution {
 export default function UserPeep({ params }: { params: Params }) {
     useCheckAuth();
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [personality, setPersonality] = useState(null);
     const [userData, setUserData] = useState<UserData | null>(null);
     const [clusterDistribution, setClusterDistribution] = useState<ClusterDistribution | null>(null);
@@ -47,6 +48,7 @@ export default function UserPeep({ params }: { params: Params }) {
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
+            setError(null); // Reset error state
             try {
                 const data = await FetchMessagingUserData(id, setLoading);
                 setUserData(data.user);
@@ -54,6 +56,7 @@ export default function UserPeep({ params }: { params: Params }) {
                 setPersonality(data.user.data.predicted_personality);
             } catch (error) {
                 console.error('Error fetching user data:', error);
+                setError('Failed to load user data. Please try again later.'); // Set error message
             } finally {
                 setLoading(false);
             }
@@ -62,16 +65,20 @@ export default function UserPeep({ params }: { params: Params }) {
         fetchData();
     }, [id]);
 
-    if (loading || !userData) {
+    if (loading) {
         return (
             <div className="flex h-screen w-full items-center justify-center flex-col space-y-4 gap-4">
-                <div className="flex flex-col space-y-3">
-                    <Skeleton className="h-[125px] w-[250px] rounded-xl" />
-                    <div className="space-y-2">
-                        <Skeleton className="h-4 w-[250px]" />
-                        <Skeleton className="h-4 w-[200px]" />
-                    </div>
-                </div>
+                <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+                <Skeleton className="h-4 w-[250px]" />
+                <Skeleton className="h-4 w-[200px]" />
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="flex h-screen w-full items-center justify-center">
+                <p className="text-red-600">{error}</p>
             </div>
         );
     }
@@ -105,6 +112,7 @@ export default function UserPeep({ params }: { params: Params }) {
     // Chart options for the Doughnut chart
     const chartOptions: ChartOptions<'doughnut'> = {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
             tooltip: {
                 callbacks: {
@@ -124,54 +132,54 @@ export default function UserPeep({ params }: { params: Params }) {
     };
 
     return (
-        <div className="flex lg:flex-row flex-col justify-between">
-            <div className='m-4 lg:w-1/2'>
-                <Card className="p-4 hover:bg-gray-200 transition-colors duration-200 ease-in-out">
+        <div className="flex flex-col lg:flex-row justify-between m-4">
+            {/* Combined Profile Card and Chart */}
+            <div className='lg:w-1/2'>
+                <Card className="p-4 m-4  hover:bg-gray-200 transition-colors duration-200 ease-in-out border-2 rounded-lg border-l-3 border-r-3 border-dashed border-black">
+                    <CardContent>
+                        <h2 className="text-lg font-bold mb-2">Distribution</h2>
+                        <h1 className="mb-4">Predicted Personality: <b>{personality}</b></h1>
+                        {clusterDistribution && (
+                            <div className="h-[20rem]"> {/* Adjusted for responsiveness */}
+                                <Doughnut data={doughnutData} options={chartOptions} />
+                            </div>
+                        )}
+                    </CardContent>
+                </Card>
+                <Card className="p-4 m-4 hover:bg-gray-200 transition-colors duration-200 ease-in-out border-2 rounded-lg border-l-3 border-r-3 border-dashed border-black">
                     <CardHeader className="card-header">
-                        <CardTitle>
-                            <p className="text-red-600 text-xl font-bold tracking-tight space-x-4">{userData.email}</p>
-                            <br />
+                        <CardTitle className="flex items-center space-x-4">
                             <Avatar>
                                 <AvatarImage
-                                    width={20}
-                                    src={`data:image/png;base64,${userData.avatarBase64}`}
-                                    alt={userData.email}
-                                    className="object-cover h-[4rem] w-[4rem] rounded-full"
+                                    width={40}
+                                    height={40}
+                                    src={userData ? `data:image/png;base64,${userData.avatarBase64}` : ''}
+                                    alt={userData ? userData.email : 'User Avatar'}
+                                    className="object-cover rounded-full"
                                 />
-                                <AvatarFallback>{getAvatarInitials(userData.email)}</AvatarFallback>
+                                <AvatarFallback>{userData ? getAvatarInitials(userData.email) : ''}</AvatarFallback>
                             </Avatar>
+                            {userData && <p className="text-red-600 text-lg font-bold">{userData.email}</p>}
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="card-body">
                         <CardDescription>
-                            <p className='text-sm' ><strong className="text-black">Bio :</strong>&nbsp;<Badge variant="secondary"> {userData.details.bio}</Badge></p>
-                            <br />
-                            <p className='text-sm'><strong className="text-black">Gender :</strong>&nbsp;<Badge variant="secondary"> {userData.details.gender}</Badge></p>
-                            <br />
-                            <p className='text-sm'><strong className="text-black">Hobbies :</strong>&nbsp;<Badge variant="secondary"> {userData.details.hobbies}</Badge></p>
-                            <br />
-                            <p className='text-sm'><strong className="text-black">Memes Liked :</strong>&nbsp;<Badge variant="secondary">{userData.likedmemes}</Badge></p>
-                            <br />
-                            <p className='text-sm'><strong className="text-black">Humor Quotient:</strong>&nbsp;<Badge variant="secondary"> {userData.details.hobbies}</Badge></p>
+                            {userData && (
+                                <>
+                                    <p className='text-sm'><strong className="text-black">Bio:</strong> <Badge variant="secondary"> {userData.details.bio}</Badge></p>
+                                    <p className='text-sm'><strong className="text-black">Gender:</strong> <Badge variant="secondary"> {userData.details.gender}</Badge></p>
+                                    <p className='text-sm'><strong className="text-black">Hobbies:</strong> <Badge variant="secondary"> {userData.details.hobbies}</Badge></p>
+                                    <p className='text-sm'><strong className="text-black">Memes Liked:</strong> <Badge variant="secondary">{userData.likedmemes}</Badge></p>
+                                    <p className='text-sm'><strong className="text-black">Humor Quotient:</strong> <Badge variant="secondary"> {userData.details.hobbies}</Badge></p>
+                                </>
+                            )}
                         </CardDescription>
                     </CardContent>
                 </Card>
             </div>
-
-            <div className='m-4 lg:w-1/2'>
+            {/* Chat Component */}
+            <div className='lg:w-1/2 m-4'>
                 <Chat userId={id} />
-            </div>
-
-            <div className='m-4 lg:w-1/2'>
-                {clusterDistribution && (
-                    <div className="p-4">
-                        <h2 className="text-lg font-bold">Distribution</h2>
-                        <h1>Predicted Personality : <b>{personality}</b></h1>
-                        <div>
-                            <Doughnut className='h-1/2 m-2' data={doughnutData} options={chartOptions} />
-                        </div>
-                    </div>
-                )}
             </div>
         </div>
     );

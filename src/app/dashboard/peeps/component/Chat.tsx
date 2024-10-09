@@ -160,10 +160,10 @@ const Chat: React.FC<ChatProps> = ({ userId }) => {
     const statusColor = (status: boolean) => (status ? 'text-green-500' : 'text-red-500');
 
     return (
-        <div className='border-2 rounded-lg border-l-3 border-r-3 border-solid border-black'>
+        <div className=' hover:bg-gray-200 transition-colors duration-200 ease-in-out border-2 rounded-lg border-l-3 border-r-3 border-dashed border-black h-full'>
             {loading ? (
                 <div className="flex m-3 h-96 w-full items-center justify-center flex-col space-y-4 gap-4">
-                    <div className="flex flex-col">
+                    <div>
                         <Skeleton className="h-[125px] w-[250px] rounded-xl" />
                     </div>
                 </div>
@@ -177,7 +177,7 @@ const Chat: React.FC<ChatProps> = ({ userId }) => {
                         </div>
                     </div>
                     <div>
-                        <div className="chat-messages m-3 h-96 overflow-y-scroll" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
+                        <div className="chat-messages m-3 h-[30rem] overflow-y-scroll" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
                             {messages.map((message) => (
                                 <div key={message.id} className={`message ${message.sender === user.user?._id ? 'sent' : 'received'}`}>
                                     <div>

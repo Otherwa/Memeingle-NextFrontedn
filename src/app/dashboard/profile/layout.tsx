@@ -1,4 +1,4 @@
-import ProfileUser from "./user/page";
+import ProfileUser from "./component/Profile";
 
 export default function ProfileLayout({
     children,

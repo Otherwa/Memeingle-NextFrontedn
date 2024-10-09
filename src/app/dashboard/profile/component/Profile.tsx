@@ -21,18 +21,17 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { fetchUserProfileData, submitForm } from '@/app/authStore/userActions';
-import axios from 'axios';
 
+// Define the form schema using Zod
 const formSchema = z.object({
-    email: z.string().email({
-        message: "Invalid email format.",
-    }),
+    email: z.string().email({ message: "Invalid email format." }),
     hobbies: z.string(),
     bio: z.string(),
     gender: z.string().optional(),
     avatar: z.any().optional()
 });
 
+// ProfileUser component definition
 export default function ProfileUser() {
     const router = useRouter();
     const [userData, setUserData] = useState({ userStats: [], user: [] });
@@ -48,30 +47,27 @@ export default function ProfileUser() {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (!token) {
-            router.push('/login');
+            router.push('/login'); // Redirect to login if token is not available
         } else {
-            fetchUserProfileData(token, setUserData, form, setBase64, setLoading);
+            fetchUserProfileData(token, setUserData, form, setBase64, setLoading); // Fetch user data
         }
     }, [form, router]);
 
-    const onFileChange = async (e: any) => {
-        if (!e.target.files) {
-            return;
-        }
+    const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files) return;
 
         const selectedFile = e.target.files[0];
         setFile(selectedFile);
 
         const reader = new FileReader();
         reader.onloadend = () => {
-            setBase64(reader.result as string);
+            setBase64(reader.result as string); // Convert the file to base64
         };
         reader.readAsDataURL(selectedFile);
     };
 
-
     const onSubmit = async (values: any) => {
-        await submitForm(values, file);
+        await submitForm(values, file); // Handle form submission
     };
 
     if (loading) {
@@ -89,10 +85,10 @@ export default function ProfileUser() {
     }
 
     return (
-        <div className="flex min-h-screen flex-col items-center p-6">
-            <div className="w-full lg:w-1/2">
+        <div className="flex min-h-screen flex-col items-center p-2">
+            <div className="w-full p-2">
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 p-5 w-full" encType="multipart/form-data">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 p-2 w-full" encType="multipart/form-data">
                         <div>
                             <label className="flex flex-col items-center w-auto" htmlFor="avatar-upload">
                                 <Avatar className="w-[12rem] h-[12rem] cursor-pointer">
