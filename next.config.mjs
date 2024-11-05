@@ -21,6 +21,10 @@ const nextConfig = {
             {
                 protocol: 'https',
                 hostname: 'cdn.myportfolio.com',
+            },
+            {
+                protocol: 'https',
+                hostname: 'media.tenor.com'
             }
         ],
     },

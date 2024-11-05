@@ -2,9 +2,7 @@
 
 import Image from "next/legacy/image";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup, } from "@/components/ui/resizable"
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
-import { SiNextdotjs, SiNeo4J, SiMongodb, SiNodedotjs } from "react-icons/si";
 import Navbar from "./nav";
 
 export default function Home() {
@@ -17,7 +15,7 @@ export default function Home() {
       <div className="flex min-h-screen flex-col items-center justify-between p-6">
         {/* Main Content */}
         <main className="flex min-h-screen flex-col items-center gap-5">
-          <h1 className="mt-2 p-7 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Meme-ingle</h1>
+          <h1 className="mt-2 p-7 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Memeingle 🤳🏻</h1>
 
           <div className="m-3 border-2 rounded-lg border-l-3 border-r-3 border-dashed border-black">
 

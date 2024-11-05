@@ -36,10 +36,9 @@ export default function ProfileUser() {
     const router = useRouter();
     const [userData, setUserData] = useState({ userStats: [], user: [] });
     const [loading, setLoading] = useState(true);
-
     const [file, setFile] = useState<File | null>(null);
     const [base64, setBase64] = useState<string | null>(null);
-
+    const [showPopup, setShowPopup] = useState(false); // State for popup visibility
     const form = useForm({
         resolver: zodResolver(formSchema)
     });
@@ -68,6 +67,8 @@ export default function ProfileUser() {
 
     const onSubmit = async (values: any) => {
         await submitForm(values, file); // Handle form submission
+        setShowPopup(true); // Show the popup on successful submission
+        setTimeout(() => setShowPopup(false), 3000); // Auto-hide the popup after 3 seconds
     };
 
     if (loading) {
@@ -86,7 +87,16 @@ export default function ProfileUser() {
 
     return (
         <div className="flex min-h-screen flex-col items-center p-2">
+            {showPopup && (
+                <div>
+                    <code className='m-3'>
+                        Profile updated ! 😭✨🎀
+                    </code>
+                </div>
+            )}
             <div className="w-full p-2">
+                {/* Popup Notification */}
+
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 p-2 w-full" encType="multipart/form-data">
                         <div>
@@ -191,6 +201,7 @@ export default function ProfileUser() {
                     </form>
                 </Form>
             </div>
+
         </div>
     );
 }

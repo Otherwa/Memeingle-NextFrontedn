@@ -9,6 +9,7 @@ import Chat from '../component/Chat';
 import { Badge } from '@/components/ui/badge';
 import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, ChartData, ChartOptions } from 'chart.js';
+import { Button } from '@/components/ui/button';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -43,12 +44,13 @@ export default function UserPeep({ params }: { params: Params }) {
     const [personality, setPersonality] = useState(null);
     const [userData, setUserData] = useState<UserData | null>(null);
     const [clusterDistribution, setClusterDistribution] = useState<ClusterDistribution | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
     const { id } = params;
 
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
-            setError(null); // Reset error state
+            setError(null);
             try {
                 const data = await FetchMessagingUserData(id, setLoading);
                 setUserData(data.user);
@@ -56,7 +58,7 @@ export default function UserPeep({ params }: { params: Params }) {
                 setPersonality(data.user.data.predicted_personality);
             } catch (error) {
                 console.error('Error fetching user data:', error);
-                setError('Failed to load user data. Please try again later.'); // Set error message
+                setError('Failed to load user data. Please try again later.');
             } finally {
                 setLoading(false);
             }
@@ -68,9 +70,13 @@ export default function UserPeep({ params }: { params: Params }) {
     if (loading) {
         return (
             <div className="flex h-screen w-full items-center justify-center flex-col space-y-4 gap-4">
-                <Skeleton className="h-[125px] w-[250px] rounded-xl" />
-                <Skeleton className="h-4 w-[250px]" />
-                <Skeleton className="h-4 w-[200px]" />
+                <div className="flex flex-col space-y-3">
+                    <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+                    <div className="space-y-2">
+                        <Skeleton className="h-4 w-[250px]" />
+                        <Skeleton className="h-4 w-[200px]" />
+                    </div>
+                </div>
             </div>
         );
     }
@@ -133,54 +139,76 @@ export default function UserPeep({ params }: { params: Params }) {
 
     return (
         <div className="flex flex-col lg:flex-row justify-between m-4">
-            {/* Combined Profile Card and Chart */}
-            <div className='lg:w-1/2'>
-                <Card className="p-4 m-4  hover:bg-gray-200 transition-colors duration-200 ease-in-out border-2 rounded-lg border-l-3 border-r-3 border-dashed border-black">
+
+            {/* Main Content Area */}
+            <div className='lg:w-1/2 '>
+                <Card className="lg:p-12 m-4 border-2 rounded-lg lg:rounded-full lg:h-[24rem] border-l-3 border-r-3 border-dashed border-black cursor-pointer">
                     <CardContent>
-                        <h2 className="text-lg font-bold mb-2">Distribution</h2>
-                        <h1 className="mb-4">Predicted Personality: <b>{personality}</b></h1>
-                        {clusterDistribution && (
-                            <div className="h-[20rem]"> {/* Adjusted for responsiveness */}
-                                <Doughnut data={doughnutData} options={chartOptions} />
-                            </div>
-                        )}
+                        <CardHeader>
+                            <CardTitle className="flex flex-col md:flex-row items-center justify-center md:space-x-6">
+                                <Avatar>
+                                    <AvatarImage
+                                        width={200} // Updated size for larger view
+                                        height={200}
+                                        src={userData ? `data:image/png;base64,${userData.avatarBase64}` : ''}
+                                        alt={userData ? userData.email : 'User Avatar'}
+                                        className="object-cover rounded-full h-44 w-44"
+                                    />
+                                    <AvatarFallback className="text-xl ">
+                                        <div className='h-44 w-44 flex flex-col md:flex-row items-center justify-center'>
+
+                                            {userData ? getAvatarInitials(userData.email) : ''}
+                                        </div>
+                                    </AvatarFallback>
+                                </Avatar>
+                                {userData && (
+                                    <p className="text-center md:text-left text-red-600 text-lg md:text-xl font-bold mt-4 md:mt-0">
+                                        {userData.email}
+                                    </p>
+                                )}
+                            </CardTitle>
+                        </CardHeader>
                     </CardContent>
+
                 </Card>
-                <Card className="p-4 m-4 hover:bg-gray-200 transition-colors duration-200 ease-in-out border-2 rounded-lg border-l-3 border-r-3 border-dashed border-black">
-                    <CardHeader className="card-header">
-                        <CardTitle className="flex items-center space-x-4">
-                            <Avatar>
-                                <AvatarImage
-                                    width={40}
-                                    height={40}
-                                    src={userData ? `data:image/png;base64,${userData.avatarBase64}` : ''}
-                                    alt={userData ? userData.email : 'User Avatar'}
-                                    className="object-cover rounded-full"
-                                />
-                                <AvatarFallback>{userData ? getAvatarInitials(userData.email) : ''}</AvatarFallback>
-                            </Avatar>
-                            {userData && <p className="text-red-600 text-lg font-bold">{userData.email}</p>}
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="card-body">
-                        <CardDescription>
-                            {userData && (
-                                <>
-                                    <p className='text-sm'><strong className="text-black">Bio:</strong> <Badge variant="secondary"> {userData.details.bio}</Badge></p>
-                                    <p className='text-sm'><strong className="text-black">Gender:</strong> <Badge variant="secondary"> {userData.details.gender}</Badge></p>
-                                    <p className='text-sm'><strong className="text-black">Hobbies:</strong> <Badge variant="secondary"> {userData.details.hobbies}</Badge></p>
-                                    <p className='text-sm'><strong className="text-black">Memes Liked:</strong> <Badge variant="secondary">{userData.likedmemes}</Badge></p>
-                                    <p className='text-sm'><strong className="text-black">Humor Quotient:</strong> <Badge variant="secondary"> {userData.details.hobbies}</Badge></p>
-                                </>
-                            )}
-                        </CardDescription>
-                    </CardContent>
-                </Card>
+                <div className="lg:p-16 p-4 m-4 border-2 rounded-lg lg:rounded-full border-l-3 border-r-3 border-solid border-black cursor-pointer">
+                    {userData && (
+                        <>
+                            <h1 className="mb-4">Predicted Personality: <b>{personality}</b></h1>
+                            <p onClick={() => setIsModalOpen(true)}><b><u>Click here to know more...</u></b></p>
+                            <br />
+                            <p className='text-sm'><strong className="text-black">Bio:</strong>  {userData.details.bio}</p>
+                            <p className='text-sm'><strong className="text-black">Gender:</strong>  {userData.details.gender}</p>
+                            <p className='text-sm'><strong className="text-black">Hobbies:</strong>  {userData.details.hobbies}</p>
+                            <p className='text-sm'><strong className="text-black">Memes Liked:</strong> {userData.likedmemes}</p>
+                            <p className='text-sm'><strong className="text-black">Humor Quotient:</strong>  {userData.details.hobbies}</p>
+                        </>
+                    )}
+                </div>
             </div>
+
             {/* Chat Component */}
             <div className='lg:w-1/2 m-4'>
                 <Chat userId={id} />
             </div>
-        </div>
+
+            {/* Modal Overlay */}
+            {
+                isModalOpen && (
+                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                        <div className="bg-white rounded-lg shadow-lg p-6 relative w-[20rem] lg:w-[45rem]">
+                            <h2 className="text-lg font-bold mb-2">Personality Distribution</h2>
+                            <h1 className="mb-4">Predicted Personality: <b>{personality}</b></h1>
+                            {clusterDistribution && (
+                                <div className="h-[20rem]">
+                                    <Doughnut data={doughnutData} options={chartOptions} />
+                                </div>
+                            )}
+                            <Button onClick={() => setIsModalOpen(false)} className="mt-4">Close</Button>
+                        </div>
+                    </div>
+                )
+            }
+        </div >
     );
 }

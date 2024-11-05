@@ -1,16 +1,15 @@
-"use client";
+'use client';
 
 import Image from "next/legacy/image";
 import { useEffect, useMemo, useState } from 'react';
 import TinderCard from 'react-tinder-card';
 import { Button } from '@/components/ui/button';
-import { isMobile } from 'react-device-detect';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import '@/styles/style.css'; // Import the CSS file
 import { useRouter } from 'next/navigation';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useCheckAuth, fetchMemes, fetchMoreMemes, likeMeme } from '@/app/authStore/userActions';
+import { useCheckAuth, fetchMemes, fetchMoreMemes, likeMeme, fetchActiveUserCount } from '@/app/authStore/userActions';
 import { Meme } from './profile/utils/Meme';
 
 export default function Dashboard() {
@@ -20,10 +19,13 @@ export default function Dashboard() {
     const [isLoading, setIsLoading] = useState(true);
     const [isFetchingMore, setIsFetchingMore] = useState(false);
     const [swingClass, setSwingClass] = useState('');
+    const [error, setError] = useState('');
+    const [activeUserCount, setActiveUserCount] = useState<number | null>(null); // State for active user count
     const router = useRouter();
 
     useMemo(() => {
-        fetchMemes(setMemes, setIsLoading, router);
+        fetchMemes(setMemes, setIsLoading, setError, router);
+        fetchActiveUserCount(setActiveUserCount);
     }, [router]);
 
     const handleSwipe = (direction: string, memeId: string) => {
@@ -76,11 +78,16 @@ export default function Dashboard() {
         }, 500);
     }
 
+    const handleImageError = (memeId: string) => {
+        setMemes(prevMemes => prevMemes.filter(meme => meme._id !== memeId));
+    }
+
     return (
         <div className="p-6 flex min-h-screen flex-col items-center overflow-y-hidden">
-            <h1 className='text-red-600 text-3xl font-bold tracking-tight'>
-                Memes
-            </h1>
+            <h1 className="text-red-600 text-4xl font-bold tracking-tight text-center mb-5 font-serif">Memes</h1>
+
+            <h5 className="text-gray-800 text-sm mb-4">(Active Users: {activeUserCount})</h5>
+
             {isLoading ? (
                 <div className="flex h-screen w-full items-center justify-center flex-col space-y-4 gap-4">
                     <div className="flex flex-col space-y-3">
@@ -91,15 +98,23 @@ export default function Dashboard() {
                         </div>
                     </div>
                 </div>
+            ) : error ? (
+                <div className="flex min-h-screen w-full flex-col items-center p-6">
+                    <code className="text-red-500">Error loading memes. Please try again later.</code>
+                    <div className="p-6 rounded-lg">
+                        <Image src="https://media.tenor.com/T9V_QxP-FwYAAAAM/hopes-deleted.gif" alt="Error GIF" className="rounded-lg" width={500} height={400} />
+                    </div>
+                </div>
+            ) : memes.length === 0 ? (
+                <div className="flex min-h-screen w-full flex-col items-center p-6">
+                    <p className="text-red-500">No memes available.</p>
+                    <Image src="/path/to/error.gif" alt="No memes GIF" className="mt-4" layout="fill" />
+                </div>
             ) : (
-                <div className="flex min-h-screen flex-col items-center p-6">
+                <div className="flex min-h-screen w-full flex-col items-center p-6">
                     <div className="flex flex-row items-center p-6 gap-4">
-                        {!isMobile ? (
-                            <>
-                                <Button variant="outline" onClick={() => swipe('left')}>Dislike 👋</Button>
-                                <Button variant="outline" onClick={() => swipe('right')}>Like 👍</Button>
-                            </>
-                        ) : null}
+                        <Button variant="outline" onClick={() => swipe('left')}>Dislike 👋</Button>
+                        <Button variant="outline" onClick={() => swipe('right')}>Like 👍</Button>
                     </div>
                     {memes.map((meme, index) => (
                         <div
@@ -133,9 +148,9 @@ export default function Dashboard() {
                                                 alt="Meme"
                                                 layout="fill"
                                                 objectFit="contain"
-                                                unoptimized
                                                 className="rounded-lg m-2"
                                                 style={{ borderRadius: "1.5rem" }}
+                                                onError={() => handleImageError(meme._id)} // Handle image loading error
                                             />
                                         </div>
                                     </CardContent>
@@ -145,7 +160,6 @@ export default function Dashboard() {
                                         </CardDescription>
                                     </CardFooter>
                                 </Card>
-
                             </TinderCard>
                         </div>
                     ))}

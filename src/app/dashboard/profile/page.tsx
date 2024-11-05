@@ -1,9 +1,10 @@
-"use client"
+"use client";
 
 import { useMemo, useState } from 'react';
 import { Skeleton } from "@/components/ui/skeleton";
 import MemeStats from "./utils/memeStats";
 import Link from "next/link";
+import Image from 'next/image';
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useCheckAuth } from "@/app/authStore/userActions";
 import { fetchUserData } from "@/app/authStore/userActions";
@@ -51,8 +52,7 @@ export default function Profile() {
     return (
         <div className="flex flex-col min-h-screen p-6 md:flex-row">
             {/* Left Panel: Profile Info */}
-            <div className="w-full h-full md:w-1/3  bg-gray-50  shadow-md mb-4 md:mr-4   hover:bg-gray-200 transition-colors duration-200 ease-in-out border-2 rounded-lg border-l-3 border-r-3 border-dashed border-black">
-                {/* Add any other profile-related components here */}
+            <div className="w-full h-full md:w-1/3  bg-gray-50  shadow-md mb-4 md:mr-4 border-2 rounded-lg border-l-3 border-r-3 border-dashed border-black">
                 <div className="mb-10 p-4">
                     <ToggleGroup variant="outline" type="single">
                         <ToggleGroupItem value="email" aria-label="Toggle Email">
@@ -60,14 +60,14 @@ export default function Profile() {
                         </ToggleGroupItem>
                     </ToggleGroup>
                 </div>
-                <div className="">
+                <div>
                     {/* Add more user details as needed */}
                     <ProfileUser />
                 </div>
             </div>
 
             {/* Right Panel: Meme Search and Stats */}
-            <div className='w-full h-full md:w-2/3'>
+            <div className='w-full h-full'>
                 <Input
                     type="text"
                     placeholder="Search memes..."
@@ -75,11 +75,14 @@ export default function Profile() {
                     onChange={handleSearchChange}
                     className="mb-6"
                 />
-                <div className="p-6 bg-gray-50 shadow-md  rounded-lg  overflow-y-auto">
-                    <MemeStats memes={filteredMemes} />
+                <div className="p-6 bg-gray-50 shadow-md overflow-y-auto rounded-lg h-[56rem]">
+                    {filteredMemes.length > 0 ? (
+                        <MemeStats memes={filteredMemes} />
+                    ) : (
+                        <p>Oh no 🥺😔</p>
+                    )}
                 </div>
             </div>
-
         </div>
     );
 }

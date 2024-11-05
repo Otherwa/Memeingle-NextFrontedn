@@ -19,7 +19,7 @@ export const useCheckAuth = () => {
 
 // ? Meme Feed
 
-export const fetchMemes = async (setMemes, setIsLoading, router) => {
+export const fetchMemes = async (setMemes, setIsLoading, setError, router) => {
     const token = localStorage.getItem('token');
     if (!token) {
         router.push('/login');
@@ -35,8 +35,63 @@ export const fetchMemes = async (setMemes, setIsLoading, router) => {
         setMemes(response.data);
     } catch (error) {
         console.error('Error fetching memes:', error);
+        setError(true);
     } finally {
         setIsLoading(false);
+    }
+
+};
+
+export const fetchActiveUserCount = async (setActiveUserCount) => {
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+        router.push('/login');
+        return;
+    }
+
+
+    try {
+        const response = await axios.get(APP_URL + 'count', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        console.log(response)
+        setActiveUserCount(response.data.count);
+    } catch (error) {
+        console.error('Error fetching active user count:', error);
+    }
+};
+
+export const pingActiveUserCount = async () => {
+
+    const token = localStorage.getItem('token');
+    try {
+        const response = await axios.get(APP_URL + 'ping', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        console.log(response)
+    } catch (error) {
+        console.error('Error fetching active user count:', error);
+    }
+};
+
+export const unpingActiveUserCount = async () => {
+
+    const token = localStorage.getItem('token');
+
+    try {
+        const response = await axios.get(APP_URL + 'unping', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        console.log(response)
+    } catch (error) {
+        console.error('Error fetching active user count:', error);
     }
 };
 

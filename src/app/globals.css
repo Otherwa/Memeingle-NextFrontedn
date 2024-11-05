@@ -143,3 +143,44 @@
     max-width: 100%;
   }
 }
+
+* {
+  font-family: 'sans-serif' !important;
+}
+
+
+.fixed {
+  position: fixed;
+}
+
+.inset-0 {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.bg-black {
+  background-color: rgba(0, 0, 0, 0.5);
+  /* Black with opacity */
+}
+
+.bg-white {
+  background-color: #fff;
+  /* White background for modal */
+}
+
+.shadow-lg {
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  /* Shadow effect */
+}
+
+.p-6 {
+  padding: 1.5rem;
+  /* Padding for modal content */
+}
+
+.rounded-lg {
+  border-radius: 0.5rem;
+  /* Rounded corners */
+}

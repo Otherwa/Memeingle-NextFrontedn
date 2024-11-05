@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { pingActiveUserCount } from './userActions';
 
 const APP_URL = process.env.NEXT_PUBLIC_PUBLICAPI_KEY;
 
@@ -9,6 +10,7 @@ export const loginUser = async (values) => {
         const { token } = response.data;
         // Save token to local storage
         localStorage.setItem('token', token);
+        pingActiveUserCount();
         return { success: true, token };
     } catch (error) {
         console.error('Login failed:', error.response?.data?.message || error.message);
