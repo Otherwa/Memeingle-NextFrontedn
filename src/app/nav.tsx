@@ -38,13 +38,6 @@ export default function Navbar() {
                                     </Link>
                                 </Badge>
                             </li>
-                            <li>
-                                <Badge variant="secondary" className="hover:bg-gray-200 transition-colors duration-200 ease-in-out">
-                                    <NavigationMenuLink className="text-sm h-12 flex flex-col justify-center md:w-[270px] lg:w-[300px]">
-                                        The Idea <span role="img" aria-label="idea">💡</span>
-                                    </NavigationMenuLink>
-                                </Badge>
-                            </li>
                         </ul>
                     </NavigationMenuContent>
                 </NavigationMenuItem>

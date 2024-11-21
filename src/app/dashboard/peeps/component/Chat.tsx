@@ -162,8 +162,8 @@ const Chat: React.FC<ChatProps> = ({ userId }) => {
     return (
         <div className=' border-2 rounded-lg border-l-3 border-r-3 border-dashed border-black h-full'>
             {loading ? (
-                <div className="flex h-screen w-full items-center justify-center flex-col space-y-4 gap-4">
-                    <div className="flex flex-col space-y-3">
+                <div className="flex h-[36rem] w-full items-center justify-center flex-col space-y-4 gap-4">
+                    <div className="flex  justify-center flex-col space-y-3">
                         <Skeleton className="h-[125px] w-[250px] rounded-xl" />
                         <div className="space-y-2">
                             <Skeleton className="h-4 w-[250px]" />
@@ -172,46 +172,49 @@ const Chat: React.FC<ChatProps> = ({ userId }) => {
                     </div>
                 </div>
             ) : (
-                <div>
-                    <div className='m-4'>
-                        <div>Recipient Status: &nbsp;
-                            <Badge variant='secondary' className={statusColor(onlineStatus[userId])}>
-                                {userId ? (onlineStatus[userId] ? "Online" : "Offline") : "Unknown"}
-                            </Badge>
+                <>
+                    <div>
+                        <div className='m-4'>
+                            <div>Recipient Status: &nbsp;
+                                <Badge variant='secondary' className={statusColor(onlineStatus[userId])}>
+                                    {userId ? (onlineStatus[userId] ? "Online" : "Offline") : "Unknown"}
+                                </Badge>
+                            </div>
+                        </div>
+                        <div>
+                            <div className="chat-messages m-3 h-[30rem] overflow-y-scroll" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
+                                {messages.map((message) => (
+                                    <div key={message.id} className={`message ${message.sender === user.user?._id ? 'sent' : 'received'}`}>
+                                        <div>
+                                            <p className='text-sm'>{message.message}</p>
+                                            <span className="text-xs">{formatTimestamp(message.timestamp)}</span>
+                                            <br />
+                                            <span className="text-xs">{message.sender === user.user?._id ? 'You' : 'Sender'}</span>
+                                        </div>
+                                    </div>
+                                ))}
+                                <div ref={messagesEndRef} />
+                            </div>
                         </div>
                     </div>
                     <div>
-                        <div className="chat-messages m-3 h-[30rem] overflow-y-scroll" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
-                            {messages.map((message) => (
-                                <div key={message.id} className={`message ${message.sender === user.user?._id ? 'sent' : 'received'}`}>
-                                    <div>
-                                        <p className='text-sm'>{message.message}</p>
-                                        <span className="text-xs">{formatTimestamp(message.timestamp)}</span>
-                                        <br />
-                                        <span className="text-xs">{message.sender === user.user?._id ? 'You' : 'Sender'}</span>
-                                    </div>
-                                </div>
-                            ))}
-                            <div ref={messagesEndRef} />
+                        <div className='m-3'>
+                            <div className="m-3">
+                                <Textarea
+                                    value={newMessage}
+                                    onChange={(e) => setNewMessage(e.target.value)}
+                                    placeholder="Type a message..."
+                                />
+                            </div>
+                            <div className="flex items-stretch">
+                                <Button className='m-2 w-full' onClick={sendMessage}>Send</Button>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </>
             )}
 
-            <div>
-                <div className='m-3'>
-                    <div className="m-3">
-                        <Textarea
-                            value={newMessage}
-                            onChange={(e) => setNewMessage(e.target.value)}
-                            placeholder="Type a message..."
-                        />
-                    </div>
-                    <div className="flex items-stretch">
-                        <Button className='m-2 w-full' onClick={sendMessage}>Send</Button>
-                    </div>
-                </div>
-            </div>
+
         </div>
     );
 };

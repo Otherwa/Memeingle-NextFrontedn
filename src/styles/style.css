@@ -25,7 +25,3 @@
 .swingright {
     animation: swingright 0.5s forwards;
 }
-
-*{
-    font-family: 'sans-serif' !important;
-}

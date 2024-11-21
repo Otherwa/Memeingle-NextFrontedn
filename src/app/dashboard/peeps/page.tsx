@@ -83,14 +83,7 @@ export default function Peeps() {
                                 </CardHeader>
                                 <CardContent className="card-body">
                                     <CardDescription>
-                                        <HoverCard>
-                                            <HoverCardTrigger>
-                                                <p><strong>Email:</strong> {user.email}</p>
-                                            </HoverCardTrigger>
-                                            <HoverCardContent>
-                                                <p><strong>Bio:</strong> {user.details.bio}</p>
-                                            </HoverCardContent>
-                                        </HoverCard>
+                                        <p><strong>Email:</strong> {user.email}</p>
                                         <p><strong>Similarity Score:</strong>
                                             <span className={`font-bold ${getSimilarityDescription(user.similarityScore).className}`}>
                                                 {getSimilarityDescription(user.similarityScore).description}
