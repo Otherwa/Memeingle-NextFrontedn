@@ -81,34 +81,11 @@ export default function Dashboard() {
         setMemes(prevMemes => prevMemes.filter(meme => meme._id !== memeId));
     }
 
-    // Function to generate random background color
-    const getRandomColor = () => {
-        const colors = [
-            '#F8F9FA', '#E3E4E6', '#F2EFEF', '#DADADA', '#D6E3D6', '#E0D6D6', '#E8F3F3', '#D6DBD9',
-            '#F0E5E5', '#E8EAEF', '#F2F2DF', '#DADBD6', '#F2E4DE', '#E2DAD5', '#F4E7D8', '#D5E3DA',
-            '#F6E6E6', '#DBE5DA', '#F2DBD6', '#E4EDEB', '#DEDDE6', '#F2EEDF', '#F4E2D8', '#F4DCC2',
-            '#DDE2EC', '#F2F1DA', '#EDE5D6', '#D6E6DB', '#E7E4E9', '#F3F2DF', '#EEDCC8', '#D9DDE6',
-            '#F0E6CF', '#E2EAD8', '#F1E8D1', '#E4EDF3', '#E8D6D6', '#EAEAEF', '#D5E3DA', '#DED1D8',
-            '#DEE3E2', '#F8EFEF', '#DCE7E6', '#E5DFE3', '#EFDACF', '#ECD8D1', '#E3DADA', '#D5DDD3',
-            '#E2E2E8', '#D1D1D5', '#D5E8F3', '#E7E0E3', '#EDE4D6', '#E5E8F3', '#DBE3DA', '#EAD6D6',
-            '#E9E3D8', '#F1E9E2', '#EDE7DE', '#F2EAD1', '#E6DEE0', '#E0D9DA', '#D7E0D3', '#DFE3EC',
-            '#F4F2F0', '#E5D5DA', '#DED8DE', '#E3E1E6', '#E4E7D6', '#DBE3E2', '#E5DEE3', '#D9E0D3',
-            '#D3DED3', '#D5D1DA', '#F3EEDF', '#E8E2D6', '#DED8E1', '#D6D8DB', '#D7E4DC', '#DED8E2',
-            '#F0E2E4', '#DED8DA', '#E3DDE6', '#DBDFE1', '#DEE0D8', '#DBDBDB', '#E4E0E2', '#E1E3E3',
-            '#D5D3D9', '#E3E0E3', '#F2E7DF', '#E3E7E5', '#D6E6DB', '#E3DFD5', '#F1E8E6', '#D6D8E4',
-            '#F0F3F2', '#EDE8D6', '#E0DBDB', '#E8E6E6', '#EAE2DB', '#D6D9DB', '#E7E3E0', '#E2E6E1',
-            '#F3F0E2', '#E4E0D3', '#D8E0D6', '#DFE8DE', '#DFE0E3', '#D5DEE6', '#E9E0D8', '#F0E8E6',
-            '#EAE3D6', '#F1E9D8', '#E2D9DA', '#E6E2D5', '#E2DDE1', '#F0ECE6'
-        ];
-
-        return colors[Math.floor(Math.random() * colors.length)];
-    };
-
     return (
         <div className="p-6 flex min-h-screen flex-col items-center overflow-y-hidden">
             <h1 className="text-red-600 text-4xl font-bold tracking-tight text-center mb-5 font-serif">Memes</h1>
 
-            <h5 className="text-gray-800 text-sm mb-4">(Active Users: {activeUserCount})</h5>
+            <code className="text-gray-800 text-sm mb-4">(Active Users: {activeUserCount})</code>
 
             {isLoading ? (
                 <div className="flex h-screen w-full items-center justify-center flex-col space-y-4 gap-4">
@@ -124,7 +101,7 @@ export default function Dashboard() {
                 <div className="flex min-h-screen w-full flex-col items-center p-6">
                     <code className="text-red-500">Error loading memes. Please try again later.</code>
                     <div className="p-6 rounded-xl">
-                        <Image src="https://media.tenor.com/T9V_QxP-FwYAAAAM/hopes-deleted.gif" alt="Error GIF" className="rounded-lg" width={500} height={400} />
+                            <Image src="https://i.pinimg.com/736x/3e/e1/16/3ee116f29b21dd41483836cedcdaf576.jpg" alt="Error GIF" className="rounded-lg" width={500} height={400} />
                     </div>
                 </div>
             ) : memes.length === 0 ? (
@@ -150,7 +127,7 @@ export default function Dashboard() {
                                 preventSwipe={['up', 'down']}
                                 className={index === 0 ? swingClass : ''} // Apply animation only to the first card
                             >
-                                <Card className="h-full w-full flex flex-col border-2 rounded-lg border-l-3 border-r-3 border-dashed border-black" style={{ backgroundColor: getRandomColor() }}>
+                                <Card className="h-full w-full flex flex-col border-2 rounded-lg border-l-3 border-r-3 border-dashed border-black" >
                                     <CardHeader>
                                         <CardTitle className='m-2'>
                                             <span>

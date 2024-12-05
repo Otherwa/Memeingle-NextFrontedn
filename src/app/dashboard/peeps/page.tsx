@@ -84,14 +84,14 @@ export default function Peeps() {
                                 <CardContent className="card-body">
                                     <CardDescription>
                                         <p><strong>Email:</strong> {user.email}</p>
-                                        <p><strong>Similarity Score:</strong>
+                                        <p><strong>Similarity Score : </strong>
                                             <span className={`font-bold ${getSimilarityDescription(user.similarityScore).className}`}>
                                                 {getSimilarityDescription(user.similarityScore).description}
                                             </span>
                                         </p>
-                                        <p><strong>Gender:</strong> {user.details.gender}</p>
-                                        <p><strong>Hobbies:</strong> {user.details.hobbies}</p>
-                                        <p><strong>Created At:</strong> {new Date(user.createdAt).toLocaleDateString()}</p>
+                                        <p><strong>Gender :</strong> {user.details.gender}</p>
+                                        <p><strong>Hobbies :</strong> {user.details.hobbies}</p>
+                                        <p><strong>Created At :</strong> {new Date(user.createdAt).toLocaleDateString()}</p>
                                     </CardDescription>
                                 </CardContent>
                             </Card>

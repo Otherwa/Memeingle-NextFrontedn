@@ -35,93 +35,93 @@ export default function Home() {
               <div className="sm:w-[30vw] w-[84vw] m-3">
                 <Accordion type="single" collapsible>
                   {/* Accordion items as before */}
-                    <AccordionItem value="item-1">
-                      <AccordionTrigger>
-                        <span className="flex items-center">
-                          🌐 Is it accessible?
-                        </span>
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        Yes! Memeingle follows accessibility best practices, including adherence to the WAI-ARIA design pattern. Our goal is to ensure that everyone can enjoy swiping memes with ease and joy.
-                      </AccordionContent>
-                    </AccordionItem>
-                    <AccordionItem value="item-2">
-                      <AccordionTrigger>
-                        <span className="flex items-center">
-                          🤔 How does it work?
-                        </span>
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        Memeingle matches users based on their meme preferences. Swipe right if you love a meme, and left if youre not feeling it. If you both swipe right, its a match! Get ready to find your meme-loving match and laugh together.
-                      </AccordionContent>
-                    </AccordionItem>
-                    <AccordionItem value="item-3">
-                      <AccordionTrigger>
-                        <span className="flex items-center">
-                          🎉 Why Memeingle?
-                        </span>
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        Memeingle is where meme enthusiasts come to connect and laugh. Its more than just swiping—its about finding someone who gets your humor and shares your passion for memes. Join Memeingle and discover your meme-loving soulmate today!
-                      </AccordionContent>
-                    </AccordionItem>
-                    <AccordionItem value="item-4">
-                      <AccordionTrigger>
-                        <span className="flex items-center">
-                          🔒 Privacy and Security
-                        </span>
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        Your privacy is our priority. Memeingle encrypts your data and protects it from unauthorized access. We never share your information without your consent, so you can swipe memes with peace of mind.
-                      </AccordionContent>
-                    </AccordionItem>
-                    <AccordionItem value="item-5">
-                      <AccordionTrigger>
-                        <span className="flex items-center">
-                          🤝 Community Guidelines
-                        </span>
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        Join a friendly community of meme lovers! Our guidelines promote respect and positivity. Spread laughs, not hate—lets make Memeingle a welcoming place for everyone.
-                      </AccordionContent>
-                    </AccordionItem>
-                    <AccordionItem value="item-6">
-                      <AccordionTrigger>
-                        <span className="flex items-center">
-                          🌟 Contributors
-                        </span>
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        Meet the awesome people who made Memeingle possible:
-                        <ul className="list-disc ml-6 mt-2">
-                          <li>Atharv Desai</li>
-                        </ul>
-                      </AccordionContent>
-                    </AccordionItem>
-                    <AccordionItem value="item-7">
-                      <AccordionTrigger>
-                        <span className="flex items-center">
-                          🔗 Repository Link
-                        </span>
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        Explore our codebase on GitHub:
-                        <div className="mt-2">
-                          <a href="https://github.com/Otherwa/Memeingle-NextFrontedn" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                            github.com/Otherwa/Memeingle-NextFrontedn
-                          </a>
-                          <br />
-                          <a href="https://github.com/Otherwa/Memeingle-Microservice" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                            github.com/Otherwa/Memeingle-Microservice
-                          </a>
-                          <br />
-                          <a href="https://github.com/Otherwa/Memeingle-Backend" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                            github.com/Otherwa/Memeingle-Backend
-                          </a>
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-              
+                  <AccordionItem value="item-1">
+                    <AccordionTrigger>
+                      <span className="flex items-center">
+                        🌐 Is it accessible?
+                      </span>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      Yes! Memeingle follows accessibility best practices, including adherence to the WAI-ARIA design pattern. Our goal is to ensure that everyone can enjoy swiping memes with ease and joy.
+                    </AccordionContent>
+                  </AccordionItem>
+                  <AccordionItem value="item-2">
+                    <AccordionTrigger>
+                      <span className="flex items-center">
+                        🤔 How does it work?
+                      </span>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      Memeingle matches users based on their meme preferences. Swipe right if you love a meme, and left if youre not feeling it. If you both swipe right, its a match! Get ready to find your meme-loving match and laugh together.
+                    </AccordionContent>
+                  </AccordionItem>
+                  <AccordionItem value="item-3">
+                    <AccordionTrigger>
+                      <span className="flex items-center">
+                        🎉 Why Memeingle?
+                      </span>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      Memeingle is where meme enthusiasts come to connect and laugh. Its more than just swiping—its about finding someone who gets your humor and shares your passion for memes. Join Memeingle and discover your meme-loving soulmate today!
+                    </AccordionContent>
+                  </AccordionItem>
+                  <AccordionItem value="item-4">
+                    <AccordionTrigger>
+                      <span className="flex items-center">
+                        🔒 Privacy and Security
+                      </span>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      Your privacy is our priority. Memeingle encrypts your data and protects it from unauthorized access. We never share your information without your consent, so you can swipe memes with peace of mind.
+                    </AccordionContent>
+                  </AccordionItem>
+                  <AccordionItem value="item-5">
+                    <AccordionTrigger>
+                      <span className="flex items-center">
+                        🤝 Community Guidelines
+                      </span>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      Join a friendly community of meme lovers! Our guidelines promote respect and positivity. Spread laughs, not hate—lets make Memeingle a welcoming place for everyone.
+                    </AccordionContent>
+                  </AccordionItem>
+                  <AccordionItem value="item-6">
+                    <AccordionTrigger>
+                      <span className="flex items-center">
+                        🌟 Contributors
+                      </span>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      Meet the awesome people who made Memeingle possible:
+                      <ul className="list-disc ml-6 mt-2">
+                        <li>Atharv Desai</li>
+                      </ul>
+                    </AccordionContent>
+                  </AccordionItem>
+                  <AccordionItem value="item-7">
+                    <AccordionTrigger>
+                      <span className="flex items-center">
+                        🔗 Repository Link
+                      </span>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      Explore our codebase on GitHub:
+                      <div className="mt-2">
+                        <a href="https://github.com/Otherwa/Memeingle-NextFrontedn" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                          github.com/Otherwa/Memeingle-NextFrontedn
+                        </a>
+                        <br />
+                        <a href="https://github.com/Otherwa/Memeingle-Microservice" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                          github.com/Otherwa/Memeingle-Microservice
+                        </a>
+                        <br />
+                        <a href="https://github.com/Otherwa/Memeingle-Backend" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                          github.com/Otherwa/Memeingle-Backend
+                        </a>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+
                   {/* Add any new items if necessary */}
                 </Accordion>
               </div>
@@ -129,11 +129,13 @@ export default function Home() {
           </div>
 
           {/* Call to Action Section */}
-          <section className="max-w-4xl mt-10 text-center">
+          <section className="max-w-4xl m-10 text-center">
             <h2 className="text-3xl font-semibold mb-4">Discover Your Meme Personality</h2>
-            <p className="text-lg mb-6">
+            <code className="text-lg mb-6">
               Dive into the world of memes and connect with people who share your sense of humor. Whether you`re here to laugh, connect, or find your meme soulmate, Memeingle has got you covered.
-            </p>
+            </code>
+            <br />
+            <br />
             <a href="/login" className="inline-block px-6 py-3 bg-blue-500 text-white rounded-lg shadow-lg hover:bg-blue-600">
               Start Swiping Memes
             </a>
